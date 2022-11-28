@@ -28,4 +28,6 @@ func solution(_ balls:Int, _ share:Int) -> Int {
         }
         return Int(round(n))
     }
+    
+    
 }
