@@ -24,105 +24,20 @@ func solution(_ board:[[Int]]) -> Int {
         secondIndex = 0
         firstIndex += 1
     }
-   
-    firstIndex = 0
+
     for i in location {
-        for j in boards {
-            var k = j
-            if firstIndex == (i[0] - 1) {
-                switch i[1] {
-                case 0 :
-                    if k[i[1]] == 0 {
-                        k[i[1]] = 2
-                    }
-                    if k[i[1]+1] == 0 {
-                        k[i[1]+1] = 2
-                    }
-                case board.count - 1 :
-                    if k[i[1]] == 0 {
-                        k[i[1]] = 2
-                    }
-                    if k[i[1]-1] == 0 {
-                        k[i[1]-1] = 2
-                    }
-                default :
-                    if k[i[1]] == 0 {
-                        k[i[1]] = 2
-                    }
-                    if k[i[1]-1] == 0 {
-                        k[i[1]-1] = 2
-                    }
-                    if k[i[1]+1] == 0 {
-                        k[i[1]+1] = 2
-                    }
-                }
-
+        
+        for j in i[0]-1...i[0]+1 {
+            if j < 0 || j >= board.count {
+                continue
             }
-            else if firstIndex == i[0] {
-                switch i[1] {
-
-                case 0 :
-                    if k[i[1]] == 0 {
-                        k[i[1]] = 2
-                    }
-                    if k[i[1]+1] == 0 {
-                        k[i[1]+1] = 2
-                    }
-                case board.count - 1 :
-                    if k[i[1]] == 0 {
-                        k[i[1]] = 2
-                    }
-                    if k[i[1]-1] == 0 {
-                        k[i[1]-1] = 2
-                    }
-                default :
-                    if k[i[1]] == 0 {
-                        k[i[1]] = 2
-                    }
-                    if k[i[1]-1] == 0 {
-                        k[i[1]-1] = 2
-                    }
-                    if k[i[1]+1] == 0 {
-                        k[i[1]+1] = 2
-                    }
+            for k in i[1]-1...i[1]+1 {
+                if k < 0 || k >= board.count {
+                    continue
                 }
-
+                boards[j][k] = 1
             }
-            else if firstIndex == (i[0] + 1) {
-                switch i[1] {
-                case 1...3 :
-                    if k[i[1]] == 0 {
-                        k[i[1]] = 2
-                    }
-                    if k[i[1]-1] == 0 {
-                        k[i[1]-1] = 2
-                    }
-                    if k[i[1]+1] == 0 {
-                        k[i[1]+1] = 2
-                    }
-                case 0 :
-                    if k[i[1]] == 0 {
-                        k[i[1]] = 2
-                    }
-                    if k[i[1]+1] == 0 {
-                        k[i[1]+1] = 2
-                    }
-                case 4 :
-                    if k[i[1]] == 0 {
-                        k[i[1]] = 2
-                    }
-                    if k[i[1]-1] == 0 {
-                        k[i[1]-1] = 2
-                    }
-                default :
-                    break
-                }
-
-            }
-            boards[firstIndex] = k
-            firstIndex += 1
         }
-        firstIndex = 0
     }
 
     for i in boards {
