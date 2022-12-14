@@ -1,3 +1,3 @@
 func solution(_ s:String) -> String {
-    return String(s.sorted(by: >))
+    String(s.sorted(by: >))
 }
