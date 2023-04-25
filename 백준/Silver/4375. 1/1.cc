@@ -18,8 +18,7 @@ int main()
             else
             {
                 cnt++;
-                tl = (tl * 10) + 1;
-                tl = tl % l;
+                tl = ((tl%l) * (10%l) + (1%l)) % l;
             }
         }
 
