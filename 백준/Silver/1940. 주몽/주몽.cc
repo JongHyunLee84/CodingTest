@@ -7,6 +7,12 @@ vector<int> v;
 int main()
 {
     cin >> N >> M;
+    if (M > 200000)
+    {
+        cout << 0 << "\n";
+        exit(0);
+    }
+
     for (int i = 0; i < N; i++)
     {
         cin >> n;
