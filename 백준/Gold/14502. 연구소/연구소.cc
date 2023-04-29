@@ -7,15 +7,6 @@ vector<pair<int, int>> v;
 
 void dfs(int y, int x)
 {
-    // for (int i = 0; i < n; i++)
-    // {
-    //     for (int j = 0; j < m; j++)
-    //     {
-    //         cout << temp[i][j] << ' ';
-    //     }
-    //     cout << '\n';
-    // }
-    // cout << "----------------------" << '\n';
     temp[y][x] = 2;
     visited[y][x] = 1;
     for (int i = 0; i < 4; i++)
@@ -44,13 +35,6 @@ int main()
         for (int j = 0; j < m; j++)
         {
             cin >> a[i][j];
-        }
-    }
-
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < m; j++)
-        {
             if (a[i][j] == 0)
             {
                 v.push_back({i, j});
@@ -101,11 +85,9 @@ int main()
                 }
                 if (cnt >= ret)
                     ret = cnt;
-                // cout << "끝" << '\n';
             }
         }
     }
-
     cout << ret << '\n';
     return 0;
 }
