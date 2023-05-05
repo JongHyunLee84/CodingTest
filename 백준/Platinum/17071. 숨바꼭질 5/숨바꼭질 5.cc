@@ -23,7 +23,7 @@ int main() {
             int x = q.front(); q.pop();
 			for(int nx : {x + 1, x - 1, x * 2}){
                 if(nx < 0 || nx > max_n || visited[turn % 2][nx]) continue;
-                visited[turn % 2][nx] = visited[(turn+1) % 2][x] + 1; 
+                visited[turn % 2][nx] = visited[(turn-1) % 2][x] + 1; 
                 if(nx == b){
                     ok = 1; break;
                 }
