@@ -3,7 +3,7 @@ using namespace std;
 const int max_ = 200004;
 int n, k, ar[max_], visited[max_];
 queue<int> q;
-list<int> v;
+vector<int> v;
 int main()  {
     cin >> n >> k;
     q.push(n);
@@ -43,9 +43,10 @@ int main()  {
     cout << ar[k]-1 << '\n';
     int temp = k;
     for(int i=0; i<ar[k]-1; i++){
-        v.push_front(visited[temp]);
+        v.push_back(visited[temp]);
         temp = visited[temp];
     }
+    reverse(v.begin(),v.end());
     v.push_back(k);
     for(int i : v) cout << i << ' ';
     return 0;    
