@@ -1,65 +1,46 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, m, jy, jx, by, bx, visited[304][304], dy[4] = {-1,0,1,0}, dx[4] = {0,1,0,-1}, ret, cnt, find_;
 char ar[304][304];
-
-void dfs(int y, int x) {
-    visited[y][x] = 1;
-    for(int i=0; i<4; i++){
-        int ny = y + dy[i];
-        int nx = x + dx[i];
-        if(ny < 0 || nx < 0 || ny >= n || nx >= m)continue;
-        if(visited[ny][nx])continue;
-        if(ar[ny][nx] == '0' && !visited[ny][nx])dfs(ny,nx);
-        else if(ar[ny][nx] == '1'){
-            ar[ny][nx] = '0';
-            visited[ny][nx] = 1;
-        }
-        else if(ar[ny][nx] == '#') {
-            find_ = 1;
-            break;
-        }
-    }
-}
+int n, m, y, x1, y2, x2;
+int dy[4] = {-1, 0, 1, 0}, dx[4] = {0, 1, 0, -1}, cnt, visited[304][304];
+queue<pair<int, int>> q;
 
 int main() {
     cin >> n >> m ;
-    cin >> jy >> jx >> by >> bx;
+    cin >> y >> x1 >> y2 >> x2;
     for(int i=0; i<n; i++){
         for(int j=0; j<m; j++){
             cin >> ar[i][j];
         }
     }
-    if(jy == by && jx == bx){
-        cout << 0 << '\n';
-        return 0;
-    }
+    y--; x1--; y2--; x2--;
+    q.push({y,x1});
+    visited[y][x1] = 1;
     
-    // while(!ret)
-    while(!ret){
-        memset(visited, 0, sizeof(visited));
-        dfs(jy-1,jx-1);
-    //     cout << "end" << '\n';
-    //     for(int i=0; i<n; i++){
-    //     for(int j=0; j<m; j++){
-    //         cout << ar[i][j] << ' ';
-    //     }
-    //     cout << '\n';
-    // }
+    while(ar[y2][x2] != '0'){
         cnt++;
-        if(find_){
-            ret = cnt;
-            break;
+        queue<pair<int,int>> temp;
+        
+        while(q.size()){
+            int ty = q.front().first;
+            int tx = q.front().second;
+            q.pop();
+            for(int i=0; i<4; i++){
+                int ny = ty + dy[i];
+                int nx = tx + dx[i];
+                if(ny < 0 || nx < 0 || ny >= n || nx >= m)continue;
+                if(visited[ny][nx])continue;
+                visited[ny][nx] = cnt;
+                if(ar[ny][nx] != '0'){
+                    ar[ny][nx] = '0';
+                    temp.push({ny,nx});
+                }else q.push({ny,nx});
+            }
         }
+        q = temp;
     }
-    cout << ret << '\n';
+    cout << visited[y2][x2] << '\n';
+    
     return 0;
 }
-
-    //     for(int i=0; i<n; i++){
-    //     for(int j=0; j<m; j++){
-    //         cout << ar[i][j] << ' ';
-    //     }
-    //     cout << '\n';
-    // }
