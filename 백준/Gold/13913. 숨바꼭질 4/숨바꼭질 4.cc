@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int max_ = 200004;
+const int max_ = 100004;
 int n, k, ar[max_], visited[max_];
 queue<int> q;
 vector<int> v;
