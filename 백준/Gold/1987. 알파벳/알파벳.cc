@@ -1,27 +1,21 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, m, visited[24][24], ret = -30, dy[4] = {-1, 0, 1, 0}, dx[4] = {0, 1, 0, -1};
+int n, m, visited[30], dy[4] = {-1, 0, 1, 0}, dx[4] = {0, 1, 0, -1}, ret;
 char ar[24][24];
-string s;
 
-void dfs(int y, int x) {
-    // if(ret == 26)return;
-    visited[y][x] = 1;
-    s += ar[y][x];
-    // cout << s << '\n';
+
+void dfs(int y, int x, int cnt) {
+    ret = max(cnt, ret);
     for(int i=0; i<4; i++){
-        int ny = dy[i] + y;
-        int nx = dx[i] + x;
+        int ny = y + dy[i];
+        int nx = x + dx[i];
         if(ny < 0 || nx < 0 || ny >= n || nx >= m)continue;
-        if(visited[ny][nx] || s.find(ar[ny][nx]) != string::npos)continue;
-        dfs(ny,nx);
-        visited[ny][nx] = 0;
-        s.erase(s.size()-1, 1);
-    }
-    int size_ = s.size();
-    if(ret < size_){
-        ret = s.size();
+        if(visited[(int)ar[ny][nx] - 'A'])continue;
+        
+        visited[(int)ar[ny][nx] - 'A'] = 1;
+        dfs(ny,nx,cnt+1);
+        visited[(int)ar[ny][nx] - 'A'] = 0;
     }
 }
 int main()
@@ -32,7 +26,8 @@ int main()
             cin >> ar[i][j];
         }
     }
-    dfs(0,0);
+    visited[(int)ar[0][0] - 'A'] = 1; 
+    dfs(0,0,1);
     cout << ret << '\n';
     return 0;
 }
