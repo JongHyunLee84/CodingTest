@@ -1,11 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, m, visited[24][24], ret = -987654321, dy[4] = {-1, 0, 1, 0}, dx[4] = {0, 1, 0, -1};
+int n, m, visited[24][24], ret = -30, dy[4] = {-1, 0, 1, 0}, dx[4] = {0, 1, 0, -1};
 char ar[24][24];
 string s;
 
 void dfs(int y, int x) {
+    // if(ret == 26)return;
     visited[y][x] = 1;
     s += ar[y][x];
     // cout << s << '\n';
