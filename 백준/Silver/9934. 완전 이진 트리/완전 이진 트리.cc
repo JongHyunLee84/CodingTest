@@ -1,22 +1,34 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int k, ar[1030], visited[1030];
+int k, ar[1030] ;
+vector<int> v[14];
+
+void go(int start, int end, int level){
+    if(start>end)return;
+    if(start == end){
+        v[level].push_back(ar[start]);
+        return;
+    }
+    
+    int mid = (start + end) / 2;
+    v[level].push_back(ar[mid]);
+    
+    go(start, mid-1, level+1);
+    go(mid+1, end, level+1);
+}
+
 
 int main() {
     cin >> k;
-    for(int i=1; i<=pow(2,k)-1; i++){
+    int end = pow(2,k)-1;
+    for(int i=0; i<end; i++){
         cin >> ar[i];
     }
-    for(int i=k; i>0; i--){
-        int n = (pow(2,i) / 2);
-        int temp = n;
-        while(n<pow(2,k)){
-            if(!visited[n] && ar[n] != 0){
-                cout << ar[n] << ' ';
-                visited[n] = 1;
-            }
-            n += temp;
+    go(0, end, 0);
+    for(int i=0; i<k; i++){
+        for(int j : v[i]){
+            cout << j << ' ';
         }
         cout << '\n';
     }
