@@ -4,14 +4,14 @@ int n, m, words[51];
 string s; 
 int count(int mask) {
     int cnt = 0;
-    for (int i=0; i<n; i++) { 
-        if((words[i] & mask) == words[i])cnt++; 
+    for (int word : words) { 
+        if(word && (word & mask) == word)cnt++; 
     }
     return cnt;
 }
 int go(int index, int k, int mask) {
-    if (k < 0) return 0;
-    if (index == 26) return count(mask); 
+    if (k == 0) return count(mask);
+    if (index >= 26) return 0; 
     int ret = go(index+1, k-1, mask | (1 << index)); 
     if (index != 'a'-'a' && index != 'n'-'a' && index != 't'-'a' && index != 'i'-'a' && index != 'c'-'a') {
         ret = max(ret, go(index+1, k, mask)); 
