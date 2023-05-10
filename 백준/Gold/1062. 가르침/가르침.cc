@@ -4,8 +4,8 @@ int n, m, words[51];
 string s; 
 int count(int mask) {
     int cnt = 0;
-    for (int word : words) { 
-        if(word && (word & mask) == word)cnt++; 
+    for (int i=0; i<n; i++) { 
+        if((words[i] & mask) == words[i])cnt++; 
     }
     return cnt;
 }
