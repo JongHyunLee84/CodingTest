@@ -1,59 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;   
 
-int n, m, ar[5][5], arr[5], ret;
+int n, m, ar[5][5], ret;
 string temp;
-
-
-
-void go(int a[5], int y){
-    if(y >= n){
-        vector<string> v;
-        int sum = 0;
-        
-        for(int i=0; i<n; i++){
-            string s = "";
-            for(int j=0; j<m; j++){
-                if( !(a[i] & (1<<j)) ){
-                    s += to_string(ar[i][j]);
-                }else {
-                    if(s != "")v.push_back(s);
-                    s = "";
-                }
-            }
-            if(s != "")v.push_back(s);
-        }
-        
-        for(int i=0; i<m; i++){
-            string s = "";
-            for(int j=0; j<n; j++){
-                if( (a[j] & (1<<i)) ){
-                    s += to_string(ar[j][i]);
-                }else {
-                    if(s != "")v.push_back(s);
-                    s = "";
-                }
-            }
-            if(s != "")v.push_back(s);
-            
-        }
-    
-
-        
-        for(string i : v)sum += stoi(i);
-        // if(sum > 2000) {
-        //     for(int i=0; i<n; i++){
-        //         cout << ar[n] << '\n';
-        //     }
-        // }
-        ret = max(ret, sum);
-        return;
-    }
-    for(int i=0; i<(1<<m); i++){
-        a[y] = i;
-        go(a, y+1);
-    }
-}
 
 int main() {
     ios_base::sync_with_stdio(false);
@@ -65,7 +14,39 @@ int main() {
             ar[i][j] = temp[j] - '0';
         }
     }
-    go(arr,0);
+    
+    for(int s=0; s<(1<<(n*m)); s++){
+        int sum = 0;
+        for(int i=0; i<n; i++){
+            int cur = 0;
+            for(int j=0; j<m; j++){
+                int k = i * m + j;
+                if( (s & (1<<k)) == 0 ){
+                    cur = cur * 10 + ar[i][j];
+                } else {
+                    sum += cur;
+                    cur = 0;
+                }
+            }
+            sum += cur;
+        }
+        
+        for (int j = 0; j < m; j++) {
+            int cur = 0;
+            for (int i = 0; i < n; i++) {
+                int k = i * m + j;
+                if ((s & (1<<k)) != 0) {
+                    cur = cur * 10 + ar[i][j];
+                } else {
+                    sum += cur;
+                    cur = 0;
+                }
+            }
+            sum += cur;
+        }
+        ret = max(ret, sum);
+    }
+    
     cout << ret << '\n';
     return 0;
 }
