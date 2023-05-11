@@ -1,18 +1,24 @@
 #include <bits/stdc++.h>
-using namespace std;
+using namespace std;   
 
-int m, n, ar[54][54], visited[54][54], cnt, room, max_room;
-int dfs(int y, int x){
-        if(ar[y][x] < 0)return 0;
-        int rooms = 1;
-        visited[y][x] = 1;
-        if((ar[y][x] & (1<<0)) == 0 && x-1 >= 0 && !visited[y][x-1])rooms += dfs(y, x-1);
-        if((ar[y][x] & (1<<1)) == 0 && y-1 >= 0 && !visited[y-1][x])rooms += dfs(y-1, x);
-        if((ar[y][x] & (1<<2)) == 0 && x+1 < m && !visited[y][x+1])rooms += dfs(y, x+1);
-        if((ar[y][x] & (1<<3)) == 0 && y+1 < n && !visited[y+1][x])rooms += dfs(y+1, x);
-        
-        return rooms;
+int n, m, cnt,ar[54][54], visited[54][54], mx, com_size[2504], big;
+int dy[4] = {0,-1,0,1}, dx[4] = {-1,0,1,0};
+
+int dfs(int y, int x, int cnt){
+    int plus = 1;
+    visited[y][x] = cnt;
+    for(int i=0; i<4; i++){
+        if(!(ar[y][x] & (1<<i))){
+            int ny = dy[i] + y;
+            int nx = dx[i] + x;
+            if(!visited[ny][nx]){
+              plus += dfs(ny,nx,cnt);
+            }
+        }
+    }
+    return plus;
 }
+
 
 int main() {
     cin >> m >> n;
@@ -21,36 +27,35 @@ int main() {
             cin >> ar[i][j];
         }
     }
-    //     for(int i=0; i<n; i++){
-    //     for(int j=0; j<m; j++){
-    //         cout << ar[i][j] << ' ';
-    //     }
-    //     cout << '\n';
-    // }
     for(int i=0; i<n; i++){
         for(int j=0; j<m; j++){
             if(visited[i][j])continue;
-            room = max(room, dfs(i,j));
             cnt++;
+            com_size[cnt] = dfs(i,j,cnt);
+            mx = max(com_size[cnt], mx);
         }
     }
-        for(int i=0; i<n; i++){
+    
+    // cout << "here" << '\n';
+    for(int i=0; i<n; i++){
         for(int j=0; j<m; j++){
-            for(int k = 0; k<=3; k++){
-                memset(visited, 0, sizeof(visited));
-                if(ar[i][j] & (1<<k)){
-                ar[i][j] &= ~(1<<k);
-                // if(i == 3 && j == 0)cout << ar[i][j] << ' ';
-                max_room = max(max_room, dfs(i,j));
-                // cout << i << '.' << j << ':' << dfs(i,j) << '\n'; 
-                ar[i][j] |= (1<<k);
+            if(i + 1 < n){
+                int first = visited[i][j];
+                int second = visited[i+1][j];
+                if(first != second){
+                    big = max(big, com_size[first] + com_size[second]);
                 }
-
             }
-            
-     
+            if(j+1 < m){
+                int first = visited[i][j];
+                int second = visited[i][j+1];
+                if(first != second){
+                    big = max(big, com_size[first] + com_size[second]);
+                }
+            }
         }
     }
-    cout << cnt << '\n' << room << '\n' << max_room << '\n';
+    // cout << "here";
+    cout << cnt << '\n' << mx << '\n' << big << '\n';
     return 0;
 }
