@@ -9,15 +9,26 @@ int main()
     cout.tie(NULL); 
     cin >> s >> boom ;
     int ss = boom.size();
-    for(int i=0; i<s.size(); i++){
-        ret += s[i];
-        if(ret.size()>=ss){
-            if(ret.substr(ret.size()-ss,ss) == boom){
-                ret.erase(ret.size()-ss,ss);
+    stack<char> st;
+    for(char i : s) {
+        st.push(i);
+        if(st.size() >= ss && st.top() == boom[ss-1]){
+            string temp = "";
+            for(auto j : boom)temp+=st.top(), st.pop();
+            reverse(temp.begin(),temp.end());
+            if(temp != boom){
+                for(auto j : temp)st.push(j);
             }
         }
     }
-    if(ret.size())cout << ret << '\n';
+    if(st.size()){
+        while(st.size()){
+            ret += st.top();
+            st.pop();
+        }
+        reverse(ret.begin(), ret.end());
+        cout << ret << '\n';
+    }
     else cout << "FRULA" << '\n';
     return 0;
 }
