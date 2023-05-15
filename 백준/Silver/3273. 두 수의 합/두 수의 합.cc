@@ -18,7 +18,7 @@ int main()
     sort(v.begin(), v.end());
     while(s<e){
         if(v[s] + v[e] > x) e--;
-        else if (v[s] + v[e] == x)cnt++, e--;
+        else if (v[s] + v[e] == x)cnt++, s++;
         else s++;
     }
     cout << cnt << '\n';
