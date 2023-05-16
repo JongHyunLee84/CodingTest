@@ -1,126 +1,95 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int r, c, t, ar[54][54], ty, tx, v, ret;
-queue<vector<int>> q;
-vector<pair<int,int>> v1,v2,cleaner;
-int dy1[] = {0, -1, 0, 1};
-int dx1[] = {1, 0, -1, 0};
-int dy2[] = {0, 1, 0, -1};
-int dx2[] = {1, 0, -1, 0};  
+int n, m, t, ar[54][54], temp[54][54], ret;
+int dy1[] = {0, -1, 0, 1}, dx1[] = {1, 0, -1, 0};
+int dy2[] = {0, 1, 0, -1}, dx2[] = {1, 0, -1, 0};
+vector<pair<int,int>> v1, v2; 
 
-vector<pair<int, int>> chung(int sy, int sx, int dy[], int dx[]){   
-    vector<pair<int, int>> v; 
-    int cnt = 0; 
-    int y = sy; 
+void mise() {
+    memset(temp, 0, sizeof(temp));
+    
+    for(int i=0; i<n; i++){
+        for(int j=0; j<m; j++){
+            if(ar[i][j]>0){
+                for(int k=0; k<4; k++){
+                    int ny = i + dy1[k];
+                    int nx = j + dx1[k];
+                    if(ny < 0 || nx < 0 || ny >= n || nx >= m || ar[ny][nx] == -1)continue;
+                    temp[ny][nx] += ar[i][j] / 5;
+                    temp[i][j] -= ar[i][j] / 5;
+                }
+            }
+        }
+    }
+    for(int i=0; i<n; i++){
+        for(int j=0; j<m; j++){
+            ar[i][j] += temp[i][j];
+        }
+    }
+}
+
+vector<pair<int,int>> rotate(int sy, int sx, int dy[], int dx[]){
+    vector<pair<int,int>> v;
+    int cnt = 0;
+    int y = sy;
     int x = sx;
-    while(true){ 
+    while(true){
         int ny = y + dy[cnt];
-        int nx = x + dx[cnt];  
+        int nx = x + dx[cnt];
         if(ny == sy && nx == sx)break;
-        if(ny < 0 || ny >= r || nx < 0 || nx >= c){
-            cnt++; 
+        if(ny < 0 || nx < 0 || ny >= n || nx >= m){
+            cnt ++;
             ny = y + dy[cnt];
             nx = x + dx[cnt];
-        } 
+        }
         if(ny == sy && nx == sx)break;
-        y = ny; x = nx; 
-        v.push_back({ny, nx});
+        v.push_back({ny,nx});
+        y = ny; x = nx;
     }
     return v;
 }
 
-void go(vector<pair<int, int>> &v){  
-    for(int i = v.size() - 1; i > 0; i--){
-        ar[v[i].first][v[i].second] = ar[v[i - 1].first][v[i - 1].second];
-    } 
-    ar[v[0].first][v[0].second] = 0; 
-    return;
+void go(vector<pair<int,int>> v){
+    for(int i = v.size()-1; i>0; i--){
+        ar[v[i].first][v[i].second] = ar[v[i-1].first][v[i-1].second];
+    }
+    ar[v[0].first][v[0].second] = 0;
 }
 
-int main()
-{
-    cin >> r >> c >> t;
+int main() {
+    cin >> n >> m >> t;
     bool flag = 1;
-    for(int i=0; i<r; i++){
-        for(int j=0; j<c; j++){
+    for(int i=0; i<n; i++){
+        for(int j=0; j<m; j++){
             cin >> ar[i][j];
-            if(ar[i][j]>0)q.push({i, j, ar[i][j]});
-            else if(ar[i][j] == -1) {
-                cleaner.push_back({i,j});
+            if(ar[i][j] == -1){
                 if(flag){
-                    v1 = chung(i, j, dy1, dx1);
+                    v1 = rotate(i,j, dy1, dx2);
                     flag = false;
-                } else v2 = chung(i,j,dy2,dx2);
+                }else {
+                    v2 = rotate(i,j,dy2,dx2);
+                }
             }
         }
     }
-    for(int s = 0; s<t; s++){
-        memset(ar,0,sizeof(ar));
-        for(int i=0; i<2; i++){
-            ar[cleaner[i].first][cleaner[i].second] = -1;
+    while(t--) {
+        mise();
+        go(v1);
+        go(v2);
+        // cout << "start" << '\n';
+        // for(int i=0; i<n; i++){
+        //     for(int j=0; j<m; j++){
+        //         cout << ar[i][j] << ' ';
+        //     }
+        //     cout << '\n';
+        // }
+    }
+    for(int i=0; i<n; i++){
+        for(int j=0; j<m; j++){
+            ret += ar[i][j];
         }
-        while(q.size()){
-            ty = q.front()[0];
-            tx = q.front()[1];
-            v = q.front()[2];
-            q.pop();
-            int cnt = 0;
-            for(int i=0; i<4; i++){
-                int ny = ty + dy1[i];
-                int nx = tx + dx1[i];
-                if(ny<0 || ny >= r || nx<0 || nx>=c || ar[ny][nx] == -1)continue;
-                if((v / 5)>0){
-                    ar[ny][nx] += v / 5;
-                    cnt++;
-                }
-            }
-            ar[ty][tx] += v - (v/5)*cnt; 
-        }
-    // cout << "start" << '\n';
-    // for(int s=0; s<t; s++){
-    // for(int i=0; i<r; i++){
-    //     for(int j=0; j<c; j++){
-    //         cout << ar[i][j] << ' ';
-    //     }
-    //     cout << '\n';
-    // }
-    // cout << "end" << '\n';
-    // }
-    go(v1);
-    go(v2);
-    // cout << "start" << '\n';
-    // for(int s=0; s<t; s++){
-    // for(int i=0; i<r; i++){
-    //     for(int j=0; j<c; j++){
-    //         cout << ar[i][j] << ' ';
-    //     }
-    //     cout << '\n';
-    // }
-    // cout << "end" << '\n';
-    // }
-            for(int i=0; i<r; i++){
-            for(int j=0; j<c; j++){
-                if(ar[i][j]>0)q.push({i,j,ar[i][j]});
-            }
-        }
-}
-    
-            for(int i=0; i<r; i++){
-            for(int j=0; j<c; j++){
-                ret += ar[i][j];
-            }
-        }
-        cout << ret+2 << '\n';
+    }
+    cout << ret+2 << '\n';
     return 0;
 }
-    // cout << "start" << '\n';
-    // for(int s=0; s<t; s++){
-    // for(int i=0; i<r; i++){
-    //     for(int j=0; j<c; j++){
-    //         cout << ar[i][j] << ' ';
-    //     }
-    //     cout << '\n';
-    // }
-    // cout << "end" << '\n';
-    // }
