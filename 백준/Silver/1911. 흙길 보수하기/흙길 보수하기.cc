@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, l, cnt, nul=-1;
+int n, l, cnt, nul=-1, a;
 
 int main()
 {
@@ -12,16 +12,15 @@ int main()
     }
     sort(v.begin(), v.end());
     for(auto i : v){
-        if(i.first>nul){
-            nul = i.first + l - 1 ;
-            cnt ++;
+        if(i.second < nul)continue;
+        if(i.first > nul) {
+            a = (i.second - i.first)/l + ((i.second - i.first) % l ? 1 : 0);
+            nul = i.first + l * a;
+        } else {
+            a = (i.second - nul) / l + ((i.second - nul) % l ? 1 : 0);
+            nul = nul + a * l;
         }
-        if(i.second - 1 > nul) {
-            while(nul < i.second - 1){
-                nul += l;
-                cnt ++;
-            }
-        }
+        cnt += a;
     }
     cout << cnt << '\n';
     return 0;
