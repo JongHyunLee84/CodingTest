@@ -2,18 +2,16 @@
 using namespace std;
 
 int n, l, cnt, nul=-1;
-vector<pair<int, int>> v;
-int ca, cb;
+
 int main()
 {
     cin >> n >> l;
+    vector<pair<int, int>> v(n);
     for(int i=0; i<n; i++){
-        cin >> ca >> cb;
-        v.push_back({ca, cb});
+        cin >> v[i].first >> v[i].second;
     }
     sort(v.begin(), v.end());
     for(auto i : v){
-        
         if(i.first>nul){
             nul = i.first + l - 1 ;
             cnt ++;
