@@ -1,107 +1,86 @@
- #include <bits/stdc++.h>
- using namespace std;
- 
-int n, m, ss, ar[104][104], br[104][104], ret;
-vector<vector<int>> sharks;
-int ta, tb, tc, td, te, dy[4] = {-1,1,0,0}, dx[4] = {0,0,1,-1};
+#include <bits/stdc++.h>
+#define max_n 100
+using namespace std;
+struct Shark {
+    int y, x, s, dir, z, death;
+}a[max_n*max_n];
+const int dx[] = {0, 0, 1, -1 };
+const int dy[] = {-1, 1, 0, 0 };
+int shark[max_n][max_n], R, C, M, ret, temp[max_n][max_n];
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+    cin >> R >> C >> M;
+    for (int i = 1; i <= M; i++) {
+        cin >> a[i].y >> a[i].x >> a[i].s >> a[i].dir >> a[i].z;
+        a[i].y--; a[i].x--; a[i].dir--;
+		
+		if(a[i].dir <= 1) a[i].s %= (2 * (R - 1));
+		else a[i].s %= (2 * (C - 1));
 
-void print_(){
-            for(int i=0; i< n; i++){
-        for(int j=0; j<m; j++){
-            cout << ar[i][j] << ' ';
+        shark[a[i].y][a[i].x] = i;
+    }
+    for (int t = 0; t < C; t++) {
+        for (int y = 0; y < R; y++) {
+            if (shark[y][t]) {
+                a[shark[y][t]].death = 1;
+                ret += a[shark[y][t]].z;
+                shark[y][t] = 0;
+                break;
+            }
         }
-        cout << '\n';
-    }
-}
+        memset(temp, 0, sizeof(temp));
+        for (int i = 1; i <= M; i++) {
+            if (a[i].death) continue; 
 
-void print_s() {
-        for(int i=0; i<ss; i++){
-        cout << sharks[i][0] << sharks[i][1] << sharks[i][2];
-        cout << '\n';
-    }
-}
-
-void move_(int y, int x, int s, int d, int size_, int idx){
-	        int ny, nx; 
+			int y = a[i].y;
+            int x = a[i].x;
+            int s = a[i].s;
+            int d = a[i].dir; 
+			int ny, nx; 
+			
+            
 			while (1) {  
 				ny = y + s * dy[d];
 				nx = x + s * dx[d]; 
-                if (nx < m && ny < n && ny >= 0 && nx >= 0)break;
-				if(d <= 1){
-					if(ny < 0){
-						s -= y;
-						y = 0;
-					}else{
-						s -= n - 1 - y;
-						y = n - 1;
-					} 
-				}else{ 
-					if(nx < 0){
-						s -= x;
-						x = 0;
-					}else {
-						s -= m - 1 - x;
-						x = m - 1;
-					} 
-				}
+                if (nx < C && ny < R && ny >= 0 && nx >= 0)break;
+                if(d == 0){
+                    int temp = y;
+                    y -= temp;
+                    s -= temp;
+                }
+                else if(d == 1){
+                    int temp = (R-1) - y;
+                    y += temp;
+                    s -= temp;
+                }
+                else if(d == 2){
+                    int temp = (C-1) - x;
+                    x += temp;
+                    s -= temp;
+                }
+                else{
+                    int temp = x;
+                    x -= temp;
+                    s -= temp;
+                }
 				d ^= 1;  
             }
-    if(br[ny][nx] > size_){
-        sharks[idx][4] = 0;
-        return;
-    } else if(br[ny][nx] && br[ny][nx] < size_) {
-        for(int i=0; i<ss; i++){
-            if(sharks[i][0] == ny && sharks[i][1] == nx && sharks[i][4]) {
-                sharks[i][4] = 0;
-                break;
-            }
+            
+			if (temp[ny][nx]) {
+                if (a[temp[ny][nx]].z < a[i].z) { 
+					a[temp[ny][nx]].death = 1; 
+					temp[ny][nx] = i; 
+				}else a[i].death = 1;
+            }else temp[ny][nx] = i;
+            
+			a[i].y = ny; 
+			a[i].x = nx; 
+			a[i].dir = d;
         }
+		memcpy(shark, temp, sizeof(temp)); 
     }
-    br[ny][nx] = size_;
-    sharks[idx][0] = ny;
-    sharks[idx][1] = nx;
-    sharks[idx][3] = d;
-}
-
-void move() {
-    memset(br, 0, sizeof(br));
-                for(int k=0; k<ss; k++){
-                    if(sharks[k][4] == 0)continue;
-                    if(ar[sharks[k][0]][sharks[k][1]] == 0){
-                        sharks[k][4] = 0;
-                        continue;
-                    }
-                    move_(sharks[k][0],sharks[k][1],sharks[k][2], sharks[k][3], sharks[k][4], k);
-                } 
-    memcpy(ar, br, sizeof(br));
-    // print_();
-    // cout << sharks[7][0] << '.' << sharks[7][1] << '\n';
-    // cout << '\n';
-}
-
- int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
-    cin >> n >> m >> ss;
-    for(int i=0; i<ss; i++){
-        cin >> ta >> tb >> tc >> td >> te;
-        ar[--ta][--tb] = te;
-        td--;
-        if(td <= 1) tc %= (2 * (n - 1));
-		else tc %= (2 * (m - 1));
-        sharks.push_back({ta, tb, tc, td, te});
-    }
-    for(int i=0; i<m; i++){
-        for(int j=0; j<n; j++){ // 열마다 한번씩 상어 잡기
-            if(ar[j][i]){
-                ret += ar[j][i];
-                ar[j][i] = 0;
-                break;
-            }
-        }
-        // 이동
-        move();
-    }
-    cout << ret << '\n';
+    cout << ret << "\n";
     return 0;
- }
+}
