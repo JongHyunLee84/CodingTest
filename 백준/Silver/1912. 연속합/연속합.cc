@@ -4,6 +4,8 @@ const int INF = -987654321;
 int n, ret = INF, temp, sum;
 
 int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
     cin >> n;
     for(int i=1; i<= n; i++){
         cin >> temp;
