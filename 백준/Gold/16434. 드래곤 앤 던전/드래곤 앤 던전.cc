@@ -6,8 +6,8 @@ ll ret = 1e18, n, atk, ti, ai, hi, sum;
 struct Room {
     ll ti, ai,hi;
 };
-
-bool check(ll mid, vector<Room> v) {
+Room v[130005];
+bool check(ll mid) {
     ll temp_hp = mid;
     ll temp_atk = atk;
     for(ll i=0; i<n; i++){
@@ -34,7 +34,6 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(NULL); cout.tie(NULL);
     cin >> n >> atk;
-    vector<Room> v(n);
     for(ll i=0; i<n; i++){
         cin >> v[i].ti >> v[i].ai >> v[i].hi;
         // cout << v[i].ti << v[i].ai << v[i].hi << '\n';
@@ -44,7 +43,7 @@ int main()
     while(l <= r){
         mid = (l+r)/2;
         // cout << l << '.' << r << '.' << mid << '\n';
-        if(check(mid, v)){
+        if(check(mid)){
             ret = min(ret, mid);
             r = mid - 1;
         }else {
