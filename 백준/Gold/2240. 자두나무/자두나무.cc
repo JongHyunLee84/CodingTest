@@ -6,7 +6,7 @@ int t, w, temp, ar[1004][2], dp[1004][2][34];
 int go(int ti, int lo, int move){
     
     if(move < 0) return -1e9;
-    if(ti > t) return move == 0 ? 0 : -1e9;
+    if(ti > t) return move >= 0 ? 0 : -1e9;
     int &ret = dp[ti][lo][move];
     if(~ret){
         // cout << ti << ' ' << lo << ' ' << move << '\n';
