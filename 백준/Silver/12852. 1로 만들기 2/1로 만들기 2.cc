@@ -1,36 +1,33 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, dp[10000004], pre[10000004];
+int n, dp[1000004], prev_[1000004];
 
 int main()
 {
-    ios::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
-    cin >> n ;
+    cin >> n;
+    fill(dp, dp + 1000004, 1e9);
     dp[1] = 0;
-    dp[2] = 1;
-    pre[2] = 1;
-    pre[3] = 1;
-    dp[3] = 1;
-    for(int i=4; i<=n; i++){
-        dp[i] = dp[i-1];
-         pre[i] = i-1;
-        if(i % 3 == 0 && dp[i] > dp[i/3]){
-            dp[i] = dp[i/3];
-            pre[i] = i / 3;
+    for(int i=2; i<=n; i++){
+        if(i-1 >= 1){
+            dp[i] = dp[i-1] + 1;
+            prev_[i] = i-1;
         }
-        if(i % 2 == 0 && dp[i] > dp[i/2]){
-            dp[i] = dp[i/2];
-            pre[i] = i / 2;
+        if(i % 2 == 0 && dp[i] > dp[i/2]+1){
+            dp[i] = dp[i/2] + 1;
+            prev_[i] = i / 2;
         }
-        dp[i] += 1;
+        if(i % 3 == 0 && dp[i] > dp[i/3] + 1){
+            dp[i] = dp[i/3] + 1;
+            prev_[i] = i / 3;
+        }
     }
     cout << dp[n] << '\n';
-    int idx = n;
-    while(pre[idx] != 0){
-        cout << idx << ' ';
-        idx = pre[idx];
+    int temp = n;
+    int repeat = dp[n];
+    while(repeat--) {
+        cout << temp << ' ';
+        temp = prev_[temp];
     }
     cout << 1 << '\n';
     return 0;
