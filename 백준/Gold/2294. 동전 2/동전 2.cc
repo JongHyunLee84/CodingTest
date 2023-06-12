@@ -1,30 +1,18 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include<bits/stdc++.h>
+using namespace std; 
+int n, k,a[10001], temp, INF = 987654321;
 
-int n, k, temp, ar[104], dp[104][100004];
-
-int go(int coins, int total) {
-    if(total == 0) return 0;
-    if(coins <= 0 || total < 0) return 1e9; 
-    int &ret = dp[coins][total];
-    if(ret != -1)return ret;
-    
-    return ret = min(go(coins-1, total), go(coins,total-ar[coins])+1);
-}
-
-
-int main()
-{
-    cin >> n >> k;
+int main() {
+    cin>>n>>k;
+    fill(a, a + 10001, INF);
+    a[0] = 0;
     for(int i=1; i<=n; i++){
-        cin >> ar[i];
-        
+        cin >> temp;
+        for(int j=temp; j <=k; j++){
+            a[j] = min(a[j], a[j-temp]+1);
+        }
     }
-    memset(dp, -1, sizeof(dp));
-    if(go(n, k) == 1e9) {
-        cout << -1 << '\n';
-    } else {
-        cout << go(n,k);
-    }
+    if(a[k] >= INF)cout << -1 << '\n';
+    else cout << a[k];
     return 0;
 }
