@@ -8,7 +8,7 @@ void springSummer() {
     // cout << "here" << '\n';
     for(int i=0; i<n; i++){
         for(int j=0; j<n; j++){
-            // if(v[i][j].size() == 0) continue;
+            if(v[i][j].size() == 0) continue;
             int die_tree = 0;
             sort(v[i][j].begin(), v[i][j].end());
             vector<int> temp;
@@ -33,7 +33,7 @@ void springSummer() {
 void fall() {
     for(int i=0; i<n; i++){
         for(int j=0; j<n; j++){
-            // if(v[i][j].size() == 0)continue;
+            if(v[i][j].size() == 0)continue;
             for(int Y : v[i][j]){
                 if(Y % 5 == 0){
                     for(int X = 0; X < 8; X++) {
