@@ -1,37 +1,39 @@
-#include<bits/stdc++.h>
+
+#include <bits/stdc++.h>
 using namespace std;
-typedef long long ll; 
-int n, c, a[31], ret; 
-vector<int> v, v2; 
-void fastIO(){ 
-    ios_base::sync_with_stdio(false); 
-	cin.tie(NULL); 
-	cout.tie(NULL); 
-	return;
+typedef long long ll;
+int N, ar[34], C, ret;
+vector<int> v, v2;
+
+void go(int idx, int end, vector<int> &v, int sum){
+    // cout << "here" << '\n';
+    if(sum > C)return;
+    if(idx > end){
+        v.push_back(sum);
+        return;
+    }
+    go(idx+1, end, v, sum + ar[idx]);
+    go(idx+1, end, v, sum);
+    return;
 }
-void go(int here, int _n, vector<int> &v, int sum){
-	if(sum > c) return; 
-	if(here > _n){
-		v.push_back(sum); return;
-	}  
-	go(here + 1, _n, v, sum + a[here]);  
-	go(here + 1, _n, v, sum); 
-	return;
-}
-int main(){
-	fastIO();
-	cin >> n >> c; 
-	for(int i = 0; i < n; i++){
-		cin >> a[i]; 
-	} 
-	
-	go(0, n / 2 - 1, v, 0); 
-	go(n / 2, n - 1, v2, 0);
-	sort(v.begin(), v.end()); 
-	sort(v2.begin(), v2.end()); 
-	for(int b : v){
-		if(c - b >= 0)ret += ((int)(upper_bound(v2.begin(),v2.end(),c - b) - v2.begin()));
-	}
-	cout << ret << "\n";  
-	return 0; 
+
+int main()
+{
+    cin >> N >> C;
+    for(int i=0; i<N; i++){
+        cin >> ar[i];
+    }
+    
+    go(0, N / 2 - 1, v, 0);
+    go(N / 2, N-1, v2, 0);
+    // cout << "here" << '\n';
+    sort(v.begin(), v.end());
+    sort(v2.begin(), v2.end());
+    
+
+    for(int i : v){
+        if(C-i >= 0) ret += ((int)(upper_bound(v2.begin(), v2.end(), C-i) - v2.begin()));
+    }
+    cout << ret << '\n';
+    return 0;
 }
