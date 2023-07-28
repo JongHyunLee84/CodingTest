@@ -15,12 +15,9 @@ int main()
         s.insert(name);
         mp[name] = isCome;
     }
-    vector<string> v;
-    for(string i : s){
-        if(mp[i] == "enter")v.push_back(i);
+    for(auto it = s.rbegin(); it != s.rend(); it++){
+        if(mp[*it] == "enter")cout << *it << '\n';
     }
-    for(int i=v.size()-1; i>=0; i--){
-        cout << v[i] << '\n';
-    }
+
     return 0;
 }
