@@ -1,73 +1,85 @@
-#include<bits/stdc++.h>
-using namespace std; 
-const int INF = 987654321;
-int a[14], mal[4], n = 10;
-int v[104]; 
-vector<int> adj[54]; 
-int move(int here, int cnt){  
-	if(here == 100) return 100; 
-	if(adj[here].size() >= 2){
-		here = adj[here][1]; cnt--; 
-	} 
-	if(cnt){
-		queue<int>q; 
-		q.push(here); 
-		while(q.size()){
-			int x = q.front(); q.pop(); 
-			here = adj[x][0];
-			q.push(here); 
-			if(here == 100)break;
-			cnt--;   
-			if(cnt == 0)break;
-		}
-	}
-	return here;
+#include <bits/stdc++.h>
+using namespace std;
+
+int horse[14], ar[54], mal[4];
+vector<int> v[54];
+
+void makeScore() {
+    for(int i=1; i<=20; i++){
+        ar[i] = i * 2;
+    }
+    ar[21] = 13; ar[22] = 16; ar[23] = 19;
+    ar[24] = 22; ar[25] = 24; 
+    ar[26] = 28; ar[27] = 27; ar[28] = 26;
+    ar[29] = 25; ar[30] = 30; ar[31] = 35;
+    
+    for(int i=0; i<20; i++){
+        v[i].push_back(i+1);
+    }
+    v[20].push_back(32); 
+    v[5].push_back(21); v[21].push_back(22); v[22].push_back(23); v[23].push_back(29);
+    v[10].push_back(24); v[24].push_back(25); v[25].push_back(29);
+    v[15].push_back(26); v[26].push_back(27); v[27].push_back(28); v[28].push_back(29);
+    v[29].push_back(30); v[30].push_back(31); v[31].push_back(20);
 }
+
 bool isMal(int mal_idx, int idx){
-	if(mal_idx == 100) return false; 
-	for(int i = 0; i < 4; i++){ 
-		if(i == idx) continue; 
-		if(mal[i] == mal_idx) return true; 
-	}
-	return false; 
+    // cout << mal_idx << ' ' << idx << '\n';
+    if(mal_idx == 32)return false;
+    for(int i=0; i<4; i++){
+        if(i == idx) continue;
+        if(mal[i] == mal_idx) return true;
+    }
+    return false;
 }
-void add(int here, int there){
-	adj[here].push_back(there); 
-}
-void setMap(){
-	for(int i = 0; i <= 19; i++) add(i, i + 1); 
-	add(5, 21); add(21, 22); add(22, 23); add(23, 24); 
-	add(15, 29); add(29, 30); add(30, 31);add(31, 24); 
 
-	add(10, 27); add(27, 28); add(28, 24); add(24, 25); 
-	add(25, 26); add(26, 20); add(20, 100);  
+int move(int here, int cnt){
+    if(here == 32)return 32;
+    if(v[here].size() >= 2){
+        here = v[here][1]; cnt--;
+    }
+    if(cnt){
+        queue<int> q;
+        q.push(here);
+        int there;
+        while(q.size()) {
+            int x = q.front(); q.pop();
+            there = v[x][0];
+            q.push(there);
+            // cout <<"there " << there << '\n';
+            if(there == 32)break;
+            cnt --;
+            if(cnt == 0)break;
+        }
+        return there;
+    }else return here;
+}
 
-	v[1] = 2; v[2] = 4;  v[3] = 6; v[4] = 8; v[5] = 10; 
-	v[6] = 12; v[7] = 14; v[8] = 16; v[9] = 18; v[10] = 20; 
-	v[11] = 22; v[12] = 24; v[13] = 26; v[14] = 28; v[15] = 30; 
-	v[16] = 32; v[17] = 34; v[18] = 36; v[19] = 38; v[20] = 40; 
-	v[21] = 13; v[22] = 16; v[23] = 19;  v[24] = 25; 
-	v[27] = 22; v[28] = 24; v[25] = 30; v[26] = 35; 
-	v[29] = 28; v[30] = 27; v[31] = 26; 
+int go(int idx){
+    // cout << idx << '\n';
+    if(idx == 10)return 0;
+    int ret = 0;
+    for(int i=0; i<4; i++){
+        // cout << ret << '\n';
+        // cout << idx << '\n';
+        int temp_idx = mal[i];
+        // cout << "temp_idx " <<temp_idx << '\n';
+        int mal_idx = move(temp_idx, horse[idx]);
+        // cout << "mal_idx " << mal_idx  << "horse[idx] " << horse[idx] << '\n';
+        if(isMal(mal_idx,i))continue;
+        mal[i] = mal_idx;
+        ret = max(ret, go(idx+1)+ar[mal_idx]);
+        mal[i] = temp_idx;
+    }
+    return ret;
 }
-int go(int here){ 
-	if(here == n) return 0; 
-	int ret = 0; 
-	for(int i = 0; i < 4; i++){
-		int temp_idx = mal[i];
-		int mal_idx = move(temp_idx, a[here]);   
-		if(isMal(mal_idx, i)) continue;    
-		mal[i] = mal_idx;  
-		ret = max(ret, go(here + 1) + v[mal_idx]); 
-		mal[i] = temp_idx; 
-	} 
-	//cout << "RET : " << ret << "\n";
-	return ret; 
-}
-int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);setMap(); 
-	for(int i = 0; i < n; i++) cin >> a[i]; 
-	cout << go(0) << "\n"; 
+
+int main()
+{
+    makeScore();
+    for(int i=0; i<10; i++){
+        cin >> horse[i];
+    }
+    cout << go(0) << '\n';
     return 0;
 }
