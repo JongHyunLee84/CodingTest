@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 2048 KB, 시간: 36 ms
+메모리: 2044 KB, 시간: 44 ms
 
 ### 분류
 
@@ -43,7 +43,7 @@
 
 <p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/7b0d9d57-1296-44cd-8951-4135d27f9446/-/preview/" style="width: 268px; height: 100px;"></p>
 
-<p style="text-align: center;">왼쪽과 오른쪽에 칸이 없기 때문에, 두 방향으로만 확산이 일어났다.</p>
+<p style="text-align: center;">왼쪽과 위쪽에 칸이 없기 때문에, 두 방향으로만 확산이 일어났다.</p>
 
 <p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/cebebfa9-0056-45f1-b705-75b035888085/-/preview/" style="width: 268px; height: 100px;"></p>
 
