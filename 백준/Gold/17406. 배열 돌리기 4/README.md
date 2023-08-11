@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 2024 KB, 시간: 16 ms
+메모리: 2060 KB, 시간: 92 ms
 
 ### 분류
 
@@ -23,15 +23,15 @@
 
 <p>예를 들어, 배열 A의 크기가 6×6이고, 회전 연산이 (3, 4, 2)인 경우에는 아래 그림과 같이 회전하게 된다.</p>
 
-<pre>A[1][1]   <span style="color:#2980b9;">A[1][2] → A[1][3] → A[1][4] → A[1][5] → A[1][6]</span>
-<span style="color:#2980b9;">             ↑                                       ↓</span>
-A[2][1]   <span style="color:#2980b9;">A[2][2]   A[2][3] → A[2][4] → A[2][5]   A[2][6]</span>
-<span style="color:#2980b9;">             ↑         ↑                   ↓         ↓</span>
-A[3][1]   <span style="color:#2980b9;">A[3][2]   A[3][3]   A[3][4]   A[3][5]   A[3][6]</span>
-<span style="color:#2980b9;">             ↑         ↑                   ↓         ↓</span>
-A[4][1]   <span style="color:#2980b9;">A[4][2]   A[4][3] ← A[4][4] ← A[4][5]   A[4][6]</span>
-<span style="color:#2980b9;">             ↑                                       ↓</span>
-A[5][1]   <span style="color:#2980b9;">A[5][2] ← A[5][3] ← A[5][4] ← A[5][5] ← A[5][6]</span>
+<pre>A[1][1]   <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">A[1][2] → A[1][3] → A[1][4] → A[1][5] → A[1][6]</span>
+<span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">             ↑                                       ↓</span>
+A[2][1]   <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">A[2][2]   A[2][3] → A[2][4] → A[2][5]   A[2][6]</span>
+<span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">             ↑         ↑                   ↓         ↓</span>
+A[3][1]   <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">A[3][2]   A[3][3]   A[3][4]   A[3][5]   A[3][6]</span>
+<span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">             ↑         ↑                   ↓         ↓</span>
+A[4][1]   <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">A[4][2]   A[4][3] ← A[4][4] ← A[4][5]   A[4][6]</span>
+<span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">             ↑                                       ↓</span>
+A[5][1]   <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">A[5][2] ← A[5][3] ← A[5][4] ← A[5][5] ← A[5][6]</span>
 
 A[6][1]   A[6][2]   A[6][3]   A[6][4]   A[6][5]   A[6][6]
 </pre>
@@ -51,18 +51,18 @@ A[6][1]   A[6][2]   A[6][3]   A[6][4]   A[6][5]   A[6][6]
 9 3 2 1 4 3</pre>
 			</td>
 			<td style="text-align: center; width: 34%;">
-			<pre>1 <span style="color:#2980b9;">8 2 3 2 5</span>
-3 <span style="color:#2980b9;">2 3 7 2 6</span>
-8 <span style="color:#2980b9;">4 5 1 1 3</span>
-3 <span style="color:#2980b9;">3 1 1 4 5</span>
-9 <span style="color:#2980b9;">2 1 4 3 1</span></pre>
+			<pre>1 <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">8 2 3 2 5</span>
+3 <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">2 3 7 2 6</span>
+8 <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">4 5 1 1 3</span>
+3 <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">3 1 1 4 5</span>
+9 <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">2 1 4 3 1</span></pre>
 			</td>
 			<td style="text-align: center; width: 33%;">
 			<pre>1 8 2 3 2 5
 3 2 3 7 2 6
-<span style="color:#2980b9;">3 8 4</span> 1 1 3
-<span style="color:#2980b9;">9 3 5</span> 1 4 5
-<span style="color:#2980b9;">2 1 1</span> 4 3 1</pre>
+<span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">3 8 4</span> 1 1 3
+<span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">9 3 5</span> 1 4 5
+<span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">2 1 1</span> 4 3 1</pre>
 			</td>
 		</tr>
 		<tr>
@@ -81,16 +81,16 @@ A[6][1]   A[6][2]   A[6][3]   A[6][4]   A[6][5]   A[6][6]
 			<td style="text-align: center; width: 34%;">
 			<pre>1 2 3 2 5 6
 3 8 7 2 1 3
-<span style="color:#2980b9;">3 8 2</span> 1 4 5
-<span style="color:#2980b9;">9 4 3</span> 1 1 1
-<span style="color:#2980b9;">3 2 5</span> 1 4 3</pre>
+<span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">3 8 2</span> 1 4 5
+<span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">9 4 3</span> 1 1 1
+<span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">3 2 5</span> 1 4 3</pre>
 			</td>
 			<td style="text-align: center; width: 33%;">
-			<pre>1 <span style="color:#2980b9;">8 2 3 2 5</span>
-3 <span style="color:#2980b9;">8 2 7 2 6</span>
-3 <span style="color:#2980b9;">4 3 1 1 3</span>
-9 <span style="color:#2980b9;">2 1 1 4 5</span>
-3 <span style="color:#2980b9;">5 1 4 3 1</span></pre>
+			<pre>1 <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">8 2 3 2 5</span>
+3 <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">8 2 7 2 6</span>
+3 <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">4 3 1 1 3</span>
+9 <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">2 1 1 4 5</span>
+3 <span style="color: rgb(41, 128, 185); --darkreader-inline-color: #54a4d9;" data-darkreader-inline-color="">5 1 4 3 1</span></pre>
 			</td>
 		</tr>
 		<tr>
