@@ -1,25 +1,26 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int ar[104], N, M, j, k;
+int n, m, f, e;
 
 int main()
 {
-    ios_base::sync_with_stdio(0); cin.tie(NULL); cout.tie(NULL);
-    cin >> N >> M;
-    for(int i=1; i<=N; i++)ar[i] = i;
-    for(int i=0; i<M; i++){
-        cin >> j >> k;
-        vector<int> v;
-        for(int q=k; q>=j; q--){
-            v.push_back(ar[q]);
+    cin >> n >> m;
+    vector<int> v(n);
+    for(int i=1; i<=n; i++){
+        v[i-1] = i;
+    }
+    for(int i=0; i<m; i++){
+        cin >> f >> e; f--; e--;
+        vector<int> temp(e-f+1);
+        for(int j=f; j<=e; j++){
+            temp[j-f] = v[j];
         }
-        int idx = 0;
-        for(int q=j; q<=k; q++){
-            ar[q] = v[idx];
-            idx++;
+        reverse(temp.begin(), temp.end());
+        for(int j=f; j<=e; j++){
+            v[j] = temp[j-f];
         }
     }
-    for(int i=1; i<=N; i++)cout << ar[i] << ' ';
+    for(int i=0; i<n; i++)cout << v[i] << ' ';
     return 0;
 }
