@@ -1,32 +1,38 @@
 #include <bits/stdc++.h>
 using namespace std;
- 
-vector<int> v[10001];
-int dp[10001], mx, visited[10001], n, m, a, b;
- 
-int dfs(int here) {  
-	visited[here] = 1;
-	int ret = 1; 
-	for(int there : v[here]){
-		if(visited[there]) continue;
-		ret += dfs(there); 
-	} 
-	return ret;
-}
- 
-int main() { 
-	ios_base::sync_with_stdio(0); 
-	cin.tie(0); 
-	cin >> n >> m;  
-	while (m--) {
-     	cin >> a >> b;  
-	    v[b].push_back(a);
-	} 
-	for (int i = 1; i <= n; i++) {
-		memset(visited, 0, sizeof(visited));
-		dp[i] = dfs(i); 
-		mx = max(dp[i], mx);
-	} 
-	for (int i = 1; i <= n; i++) if (mx == dp[i]) cout << i << " "; 
-	return 0;
+
+int n, m, a, b, cnt[10004], visited[10004], ret;
+vector<vector<int>> v(10004);
+set<int> s;
+int main()
+{
+    cin >> n >> m;
+    for(int i=0; i<m; i++){
+        cin >> a >> b;
+        v[b].push_back(a);
+    }
+    for(int i=1; i<= n; i++){
+        memset(visited, 0, sizeof(visited));
+        queue<int> q;
+        q.push(i);
+        visited[i] = 1;
+        int sum = 0;
+        while(q.size()){
+            int f = q.front(); q.pop();
+            for(int j : v[f]){
+                if(!visited[j]){
+                    visited[j] = 1;
+                    sum++;
+                    q.push(j);
+                }
+            }
+        }
+        cnt[i] = sum;
+        ret = max(ret, sum);
+    }
+    for(int i=1; i<=n; i++){
+        if(cnt[i] == ret)s.insert(i);
+    }
+    for(int i : s)cout << i << ' ';
+    return 0;
 }
