@@ -6,6 +6,6 @@ char a;
 int main()
 {
     cin >> a;
-    cout << a - NULL << '\n';
+    cout << a - 0 << '\n';
     return 0;
 }
