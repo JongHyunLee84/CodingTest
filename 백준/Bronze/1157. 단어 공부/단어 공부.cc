@@ -1,25 +1,28 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, ret, a, b, c, d, e, f;
+int ret;
 string s;
-map<int, int> mp;
+map<int, int> m;
+vector<int> v;
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
     cin >> s;
-    for(char i : s)mp[tolower(i)]++;
-    for(int i=97; i<=122; i++){
-        if(mp[i] > a){
-            a = mp[i];
-            c = i;
-            b = 1;
-        }else if(mp[i] == a && a != 0){
-            b++;
+    for(int i=0; i<s.size(); i++){
+        if(s[i] >= 65 && 97 > s[i]){
+            m[s[i] - 'A']++;
+        }else {
+            int temp = s[i] - 97;
+            m[temp]++;
         }
     }
-    if(b > 1)cout << '?' <<'\n';
-    else cout << (char)toupper(char(c)) << '\n';
+    for(int i=0; i<26; i++){
+        ret = max(ret, m[i]);
+    }
+    for(int i=0; i<26; i++){
+        if(m[i] == ret)v.push_back(i);
+    }
+    if(v.size() > 1)cout << '?' << '\n';
+    else cout << (char)(v[0] + 'A') << '\n';
     return 0;
 }
