@@ -1,46 +1,68 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int INF = 987654321;  
-int n, a[11], m, temp, ret = INF, comp[11], visited[11];
-vector<int> adj[11]; 
-pair<int, int> dfs(int here, int value){
-    visited[here] = 1; 
-    pair<int, int> ret = {1, a[here]}; 
-    for(int there : adj[here]){
-        if(comp[there] != value) continue; 
-        if(visited[there]) continue; 
-        pair<int, int> _temp = dfs(there, value); 
-        ret.first += _temp.first; 
-        ret.second += _temp.second;  
-    }
-    return ret; 
-}  
-int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    cin >> n; 
-    for(int i = 1; i <= n; i++){
-        cin >> a[i];  
-    }
-    for(int i = 1; i <= n; i++){
-        cin >> m; 
-        for(int j = 0; j < m; j++){
-            cin >> temp; 
-            adj[i].push_back(temp); 
-        } 
-    }
-    for(int i = 1; i < (1 << n) - 1; i++){
-        fill(comp, comp + 11, 0);
-        fill(visited, visited + 11, 0);
-        int idx1 = -1, idx2 = -1; 
-        for(int j = 0; j < n; j++){
-            if(i & (1 << j)){comp[j + 1] = 1; idx1 = j + 1;}
-            else idx2 = j + 1; 
+
+int n, pop[14], visited[14], temp, near, ret = 1e9;
+
+void checkMax(vector<int> f, vector<int> s){
+    int f_ = 0, s_ = 0;
+    for(int i : f)f_ += pop[i];
+    for(int i : s)s_ += pop[i];
+    int gap = abs(f_ - s_);
+    ret = min(ret, gap);
+}
+
+bool isConnect(vector<int> f, vector<vector<int>> v){
+    queue<int> q;
+    memset(visited, 0, sizeof(visited));
+    if(f.size()){
+        q.push(f[0]);
+        while(q.size()){
+            int temp = q.front(); q.pop();
+            visited[temp] = 1;
+            for(int i=0; i<v[temp].size(); i++){
+                if(visited[v[temp][i]])continue;
+                if(find(f.begin(), f.end(), v[temp][i]) != f.end()){
+                    q.push(v[temp][i]);
+                }
+            }
         }
-        pair<int, int> comp1 = dfs(idx1, 1);
-        pair<int, int> comp2 = dfs(idx2, 0);   
-        if(comp1.first + comp2.first == n) ret = min(ret, abs(comp1.second - comp2.second)); 
-    } 
-    cout << (ret == INF ? -1 : ret)<< "\n";
+    }
+    for(int i=0; i<f.size(); i++){
+        if(visited[f[i]])continue;
+        else return false;
+    }
+    return true;
+}
+
+int main() {
+    cin >> n;
+    for(int i=0; i<n; i++)cin>>pop[i];
+    vector<vector<int>> v;
+    for(int i=1; i<=n; i++){
+        cin >> temp;
+        vector<int> temp_v;
+        for(int j=0; j<temp; j++){
+            cin >> near; near--;
+            temp_v.push_back(near);
+        }
+        v.push_back(temp_v);
+    }
+    for(int i=1; i<(1<<n)-1; i++){
+        vector<int> team1, team2;
+        for(int j=0; j<n; j++){
+            if(i & (1<<j))team1.push_back(j);
+            else team2.push_back(j);
+        }
+        if(!isConnect(team1, v) || !isConnect(team2, v))continue;
+        // cout << "team 1 : ";
+        // for(int j : team1)cout << j << ' ';
+        // cout << '\n';
+        // cout << "team 2 : ";
+        // for(int j : team2)cout << j << ' ';
+        // cout << '\n';
+        checkMax(team1, team2);
+    }
+    if(ret == 1e9)cout << -1 << '\n';
+    else cout << ret << '\n';
+    return 0;
 }
