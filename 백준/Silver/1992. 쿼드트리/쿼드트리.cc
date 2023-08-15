@@ -1,51 +1,33 @@
 #include <bits/stdc++.h>
 using namespace std;
-int n, ar[64][64];
 
-string go(int start_y, int start_x, int size)
-{
-
-    if (size == 1)
-        return to_string(ar[start_y][start_x]);
-    string ret;
-    int whichNum = ar[start_y][start_x];
-    for (int i = start_y; i < start_y + size; i++)
-    {
-        for (int j = start_x; j < start_x + size; j++)
-        {
-            if (whichNum != ar[i][j])
-            {
-                // cout << "4등분 시작 " << '\n';
-
-                ret += "(";
-                // cout << start_y << "." << start_x << '.' << size / 2 << '\n';
-                ret += go(start_y, start_x, size / 2);
-                // cout << start_y << "." << start_x + (size / 2) << '.' << size / 2 << '\n';
-                ret += go(start_y, start_x + (size / 2), size / 2);
-                // cout << start_y + (size / 2) << "." << start_x << '.' << size / 2 << '\n';
-                ret += go(start_y + (size / 2), start_x, size / 2);
-                // cout << start_y + (size / 2) << "." << start_x + (size / 2) << '.' << size / 2 << '\n';
-                ret += go(start_y + (size / 2), start_x + (size / 2), size / 2);
-                ret += ")";
-
-                return ret;
-            }
-        }
+int n, ar[70][70];
+string s;
+string go(int y, int x, int idx){
+    // cout << y << x << idx << '\n';
+    string s = "";
+    if(idx == 1){
+        return to_string(ar[y][x]);
     }
-    return to_string(ar[start_y][start_x]);
+    s += go(y, x, idx/2);
+    s += go(y, x+idx/2, idx/2);
+    s += go(y+idx/2, x, idx/2);
+    s += go(y+idx/2, x+idx/2, idx/2);
+    if(s == "1111")return "1";
+    else if(s == "0000")return "0";
+    else return "(" + s + ")";
 }
 
-int main()
-{
+
+int main() {
+    ios_base::sync_with_stdio(0); cin.tie(NULL); cout.tie(NULL);
     cin >> n;
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            scanf("%1d", &ar[i][j]);
+    for(int i=0; i<n; i++){
+        cin >> s;
+        for(int j=0; j<n; j++){
+            ar[i][j] = s[j] - '0';
         }
     }
-
-    cout << go(0, 0, n);
+    cout << go(0, 0, n) << '\n';
     return 0;
 }
