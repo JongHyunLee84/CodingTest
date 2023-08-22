@@ -1,40 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int T, N, M, visited[1001];
-int a, b;
-vector<int> v[1004];
+int t, n, m, a, b, visited[1004];
 
-void dfs(int start){
-    visited[start] = 1;
-    for(int i : v[start]){
-        if(!visited[i])dfs(i);
+int dfs(int node, vector<vector<int>> v){
+    int ret = 1;
+    for(int i : v[node]){
+        if(visited[i])continue;
+        visited[i] = 1;
+        ret += dfs(i, v);
     }
+    return ret;
 }
 
-int main(){
-    cin >> T;
-    for(int i=0; i<T; i++){
-        cin >> N >> M;
-        memset(visited, 0, sizeof(visited));
-        for(int i=0; i<1004; i++)v[i].clear();
-        int cnt = 0;
-        for(int j=0; j<M; j++){
-            cin >> a >> b; 
+int main()
+{
+    ios_base::sync_with_stdio(0); cin.tie(NULL); cout.tie(NULL);
+    cin >> t;
+    for(int i=0; i<t; i++){
+        cin >> n >> m;
+        vector<vector<int>> v(n);
+        for(int j=0; j<m; j++){
+            cin >> a >> b; a--; b--;
             v[a].push_back(b);
             v[b].push_back(a);
         }
-        for(int k=1; k<=N; k++){
-            if(!visited[k]) {
-                dfs(k);
-                cnt++;
-            }
-        }
-        if( M == N-1 && cnt == 1 ){
-            cout << "tree" << '\n';
-        } else {
-            cout << "graph" << '\n';
-        }
+        memset(visited, 0, sizeof(visited));
+        visited[0] = 1;
+        int isTree = dfs(0, v);
+        if(isTree == n && n-1 == m)cout << "tree" << '\n';
+        else cout << "graph" << '\n';
     }
+    
+    
     return 0;
 }
