@@ -1,17 +1,18 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int INF = -987654321;
-int n, ret = INF, temp, sum;
+typedef long long ll;
+ll n, ret = -1e9, temp, sum = -1e9;
 
-int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
+int main()
+{
+    ios_base::sync_with_stdio(0); cin.tie(NULL); cout.tie(NULL);
     cin >> n;
-    for(int i=1; i<= n; i++){
+    for(int i=0; i<n; i++){
         cin >> temp;
-        sum += temp;
+        if(sum + temp > 0 && sum + temp > temp)sum += temp;
+        else if(sum <= temp)sum = temp;
+        else sum = -1e9;
         ret = max(ret, sum);
-        if(sum < 0) sum = 0;
     }
     cout << ret << '\n';
     return 0;
