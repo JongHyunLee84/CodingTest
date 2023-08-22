@@ -1,56 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
+
 string s;
-
-bool check(string s)
-{
-    stack<char> q;
-    for (auto i : s)
-    {
-        if (i == '(')
-        {
-            q.push(i);
-        }
-        if (i == '[')
-        {
-            q.push(i);
-        }
-        if (i == ')')
-        {
-            if (q.size() == 0 || q.top() == '[')
-                return false;
-            else
-                q.pop();
-        }
-        if (i == ']')
-        {
-            if (q.size() == 0 || q.top() == '(')
-                return false;
-            else
-                q.pop();
-        }
-    }
-    if (q.empty())
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
 int main()
 {
-    while (true)
-    {
+    ios_base::sync_with_stdio(0); cin.tie(NULL); cout.tie(NULL);
+    while(1){
         getline(cin, s);
-        if (s == ".")
-            break;
-        if (check(s))
-            cout << "yes" << '\n';
-        else
-            cout << "no" << '\n';
+        if(s == ".")break;
+        stack<char> q;
+        bool isNo = 0;
+        for(char i : s){
+            // cout << i << ' ';
+            if(i == '(' || i == '[')q.push(i);
+            else if(i == ')'){
+                if(q.size() && q.top() == '(')q.pop();
+                else {
+                    isNo = 1;
+                    break;
+                }
+            }
+            else if(i == ']'){
+                if(q.size() && q.top() == '[')q.pop();
+                else {
+                    isNo = 1;
+                    break;
+                }
+            } 
+        }
+        if(isNo || q.size())cout << "no" << '\n';
+        else cout << "yes" << '\n';
     }
+    
+    
     return 0;
 }
