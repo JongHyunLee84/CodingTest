@@ -1,35 +1,35 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-int n, k, ar[100004], visited[100004];
-queue<int> q;
-
-int main()  {
-    cin >> n >> k;
-    q.push(n);
-    ar[n] = 1;
-    visited[n] = 1;
-    if(n == k){
+const int MAX = 200000; 
+int visited[MAX+4];
+long long cnt[MAX+4];
+int main() {
+    int n, m;
+    cin >> n >> m;
+    if(n == m){
         puts("0"); puts("1");
         return 0; 
     } 
-    while(q.size()) {
+    visited[n] = 1;
+    cnt[n] = 1;
+    queue<int> q;
+    q.push(n);
+    while (!q.empty()) {
         int now = q.front();
         q.pop();
-        for(int next : {now+1, now-1, now*2}) {
-            if( 0 <= next && next <= 100000 ){
-                if(!ar[next]){
-                    ar[next] = ar[now] + 1;
-                    q.push(next);
-                    visited[next] = visited[now];
-                } else if(ar[next] == ar[now] + 1){
-                    visited[next] += visited[now];
+        for (int next : {now-1, now+1, now*2}) {
+            if (0 <= next && next <= MAX) { 
+                if (!visited[next]) {
+                    q.push(next); 
+                    visited[next] = visited[now] + 1;
+                    cnt[next] += cnt[now];
+                } else if (visited[next] == visited[now] + 1) {
+                    cnt[next] += cnt[now];
                 }
             }
         }
     }
-    cout << ar[k]-1 << '\n';
-    cout << visited[k] << '\n';
-    return 0;    
+    cout << visited[m] - 1 << '\n';
+    cout << cnt[m] << '\n';
+    return 0;
 }
-
