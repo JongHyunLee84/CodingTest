@@ -2,9 +2,9 @@
 using namespace std;
 typedef long long ll;
 
-const int INF = 200000;
-int su, si, visited[INF+4];
-ll cnt[INF+4];
+const int INF = 100000;
+int su, si, visited[INF+3];
+ll cnt[INF+3];
 
 
 int main() {
