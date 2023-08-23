@@ -1,23 +1,25 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, temp, ar[1000004];
-set<int> s;
+int n, temp;
 map<int, int> mp;
-int main() {
-    ios_base::sync_with_stdio(0); cin.tie(NULL); cout.tie(NULL);
-    
+int main()
+{
     cin >> n;
+    vector<int> v(n), v2(n);
     for(int i=0; i<n; i++){
-        cin >> temp;
-        ar[i] = temp;
-        s.insert(temp);
+        cin >> v[i];
+        v2[i] = v[i];
     }
-    int index = 0;
-    for(auto i : s){
-        mp[i] = index;
-        index++;
+    int idx = 1;
+    sort(v.begin(), v.end());
+    for(int i=0; i<n; i++){
+        if(mp[v[i]])continue;
+        mp[v[i]] = idx;
+        idx++;
     }
-    for(int i=0; i<n; i++)cout << mp[ar[i]] << ' ';
+    for(int i=0; i<n; i++){
+        cout << mp[v2[i]]-1 << ' ';
+    }
     return 0;
 }
