@@ -3,8 +3,8 @@ using namespace std;
 typedef long long ll;
 
 const int INF = 100000;
-int su, si, visited[INF+2];
-ll cnt[INF+2];
+int su, si, visited[INF+1];
+ll cnt[INF+1];
 
 
 int main() {
