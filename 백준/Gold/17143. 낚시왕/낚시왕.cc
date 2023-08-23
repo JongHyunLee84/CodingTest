@@ -1,86 +1,103 @@
 #include <bits/stdc++.h>
-#define max_n 100
 using namespace std;
+
+int R, C, M, r, c, s, d, z, dy[4] = {-1, 1, 0, 0}, dx[4] = {0, 0, 1, -1}, ar[104][104], ret, temp_ar[104][104];
 struct Shark {
-    int y, x, s, dir, z, death;
-}a[max_n*max_n];
-const int dx[] = {0, 0, 1, -1 };
-const int dy[] = {-1, 1, 0, 0 };
-int shark[max_n][max_n], R, C, M, ret, temp[max_n][max_n];
-int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+    int r, c, s, d, z, die;
+};
+vector<Shark> v;
+
+void fishing(int idx) {
+    int is_catch = 0;
+    for(int i=0; i<R; i++){
+        if(is_catch)break;
+        if(ar[i][idx]){
+            ret += ar[i][idx];
+            for(int j=0; j<v.size(); j++){
+                if(v[j].z == ar[i][idx]){
+                    v[j].die = 1;
+                    ar[i][idx] = 0;
+                    is_catch = 1;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void kill_shark(int shark_size) {
+    for(int i=0; i<v.size(); i++){
+        if(v[i].z == shark_size){
+            v[i].die = 1;
+            break;
+        }
+    }
+}
+
+// void swim() {
+//     for(int i=0; i<R; i++){
+//         for(int j=0; j<C; j++){
+//             if(ar[i][j]){
+                
+//             }
+//         }
+//     }
+// }
+
+void swim() {
+    memset(temp_ar, 0, sizeof(temp_ar));
+    for(int i=0; i<v.size(); i++){
+        if(v[i].die)continue;
+        Shark temp = v[i];
+        int idx = temp.s;
+        if(temp.d == 0 || temp.d == 1 && idx >= (R-1) * 2)idx %= (R-1) * 2;
+        else if(temp.d == 2 || temp.d == 3 && idx >= (C-1) * 2)idx %= (C-1) * 2;
+        for(int i=0; i<idx; i++){
+            int ny = temp.r + dy[temp.d];
+            int nx = temp.c + dx[temp.d];
+            if(ny < 0 || nx < 0 || ny >= R || nx >= C){
+                temp.d ^= 1;
+                ny = temp.r + dy[temp.d];
+                nx = temp.c + dx[temp.d];
+            }
+            temp.r = ny; temp.c = nx;
+        }
+        if(temp_ar[temp.r][temp.c] > temp.z)temp.die = 1;
+        else if(temp_ar[temp.r][temp.c] && temp_ar[temp.r][temp.c] < temp.z){
+            kill_shark(temp_ar[temp.r][temp.c]);
+            temp_ar[temp.r][temp.c] = temp.z;
+        }
+        else temp_ar[temp.r][temp.c] = temp.z;
+        v[i] = temp;
+    }
+    memcpy(ar, temp_ar, sizeof(ar));
+}
+
+void print() {
+    for(int i=0; i<=R; i++){
+        for(int j=0; j<=C; j++){
+            cout << ar[i][j] << ' ';
+        }
+        cout << '\n';
+    }
+    cout << '\n';
+}
+
+int main()
+{
     cin >> R >> C >> M;
-    for (int i = 1; i <= M; i++) {
-        cin >> a[i].y >> a[i].x >> a[i].s >> a[i].dir >> a[i].z;
-        a[i].y--; a[i].x--; a[i].dir--;
-		
-		if(a[i].dir <= 1) a[i].s %= (2 * (R - 1));
-		else a[i].s %= (2 * (C - 1));
-
-        shark[a[i].y][a[i].x] = i;
+    for(int i=0; i<M; i++){
+        cin >> r >> c >> s >> d >> z; r--; c--; d--;
+        Shark temp; temp.r = r; temp.c = c; temp.s = s; temp.d = d; temp.z = z;
+        v.push_back({temp});
+        ar[r][c] = z;
     }
-    for (int t = 0; t < C; t++) {
-        for (int y = 0; y < R; y++) {
-            if (shark[y][t]) {
-                a[shark[y][t]].death = 1;
-                ret += a[shark[y][t]].z;
-                shark[y][t] = 0;
-                break;
-            }
-        }
-        memset(temp, 0, sizeof(temp));
-        for (int i = 1; i <= M; i++) {
-            if (a[i].death) continue; 
-
-			int y = a[i].y;
-            int x = a[i].x;
-            int s = a[i].s;
-            int d = a[i].dir; 
-			int ny, nx; 
-			
-            
-			while (1) {  
-				ny = y + s * dy[d];
-				nx = x + s * dx[d]; 
-                if (nx < C && ny < R && ny >= 0 && nx >= 0)break;
-                if(d == 0){
-                    int temp = y;
-                    y -= temp;
-                    s -= temp;
-                }
-                else if(d == 1){
-                    int temp = (R-1) - y;
-                    y += temp;
-                    s -= temp;
-                }
-                else if(d == 2){
-                    int temp = (C-1) - x;
-                    x += temp;
-                    s -= temp;
-                }
-                else{
-                    int temp = x;
-                    x -= temp;
-                    s -= temp;
-                }
-				d ^= 1;  
-            }
-            
-			if (temp[ny][nx]) {
-                if (a[temp[ny][nx]].z < a[i].z) { 
-					a[temp[ny][nx]].death = 1; 
-					temp[ny][nx] = i; 
-				}else a[i].death = 1;
-            }else temp[ny][nx] = i;
-            
-			a[i].y = ny; 
-			a[i].x = nx; 
-			a[i].dir = d;
-        }
-		memcpy(shark, temp, sizeof(temp)); 
+    for(int i=0; i<C; i++){
+        // cout << "before" << "\n"; print();
+        fishing(i);
+        swim();
+        // cout << "after" << "\n"; print(); 
     }
-    cout << ret << "\n";
+    cout << ret << '\n';
     return 0;
 }
