@@ -1,39 +1,45 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-int n, ar[24], ret = 987654321;
+int n, ar[24][24], ret = 1e9;
 string s;
+
 void go(int idx){
     if(idx == n){
-        // for(int i=0; i<n; i++)cout << ar[i] << '\n';
-        // cout << "end\n";
-        int sum = 0;
-        for(int i=1; i<= (1 << (n - 1)); i *= 2){
-            int cnt = 0;
+        int cnt = 0;
+        for(int i=0; i<n; i++){
+            int isChange = 0;
             for(int j=0; j<n; j++){
-                if(ar[j] & i)cnt++;
+                isChange += ar[j][i];
             }
-            sum += min(cnt, n -cnt);
+            if(isChange > n/2)cnt += n - isChange;
+            else cnt += isChange;
         }
-        ret = min(ret, sum);
+        ret = min(ret, cnt);
         return;
     }
     go(idx+1);
-    ar[idx] = ~ar[idx];
+    for(int i=0; i<n; i++){
+        ar[idx][i] ^= 1;
+    }
     go(idx+1);
+    for(int i=0; i<n; i++){
+        ar[idx][i] ^= 1;
+    }
 }
 
 int main() {
     cin >> n;
     for(int i=0; i<n; i++){
         cin >> s;
-        int temp = 1;
         for(int j=0; j<n; j++){
-            if(s[j]=='T')ar[i] |= temp;
-            temp *= 2;
+            if(s[j] == 'T'){
+                ar[i][j] = 1;
+            }
         }
     }
     go(0);
     cout << ret << '\n';
     return 0;
 }
+
