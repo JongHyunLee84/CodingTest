@@ -1,30 +1,33 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, cnt;
-bool check[4000004];
-vector<int> v;
-int main()
-{
+int n, ar[4000004], sum[2000004], ret;
+
+int main() {
+    
     cin >> n;
-    for(int i=2; i<=n; i++){
-        if(check[i])continue;
-        for(int j = 2*i; j <= n; j += i){
-            check[j] = 1;
+        for(int i=2; i<=n; i++){
+        if(ar[i])continue;
+        for(int j=i*2; j<=n; j+=i){
+            ar[j] = 1;
         }
     }
-    for(int i=2; i<= n; i++) if(check[i] == 0)v.push_back(i);
-    // for(int i : v) cout << i << ' ';
-    int sum = 0;
-    int hi = 0;
-    int lo = 0;
-    while(true) {
-        if(sum >= n) sum -= v[lo++];
-        else if(hi == v.size())break;
-        else sum += v[hi++];
-        if(sum == n)cnt++;
+    int idx = 0;
+    for(int i=2; i<=n; i++){
+        if(!ar[i]){
+            sum[idx] = i;
+            idx++;
+        }
     }
     
-    cout << cnt << '\n';
+    int l = 0, r = 0, temp = 0;
+    while(1){
+        if(temp >= n)temp -= sum[l++];
+        else if(r > idx)break;
+        else if(temp < n)temp += sum[r++];
+        if(temp == n)ret++;
+    }
+    cout << ret << '\n';
     return 0;
 }
+
