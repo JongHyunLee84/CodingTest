@@ -1,10 +1,18 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
-int a, b, v, ret;
+
+int a, b, v;
+
 int main()
 {
     cin >> a >> b >> v;
-    int mm = a - b;
-    cout << (v-b-1) / mm + 1 << '\n';
+    if(a >= v){
+        cout << 1 << '\n';
+        return 0;
+    }
+    int c = v - a;
+    int d = a - b;
+    int e = c % d == 0 ? c / d : c / d + 1;
+    cout << e + 1;
     return 0;
-}  
+}
