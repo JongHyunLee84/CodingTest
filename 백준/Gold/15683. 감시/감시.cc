@@ -1,156 +1,136 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int INF = 987654321;
-int n, m, ar[8][8], temp[8][8], ret = INF;
-vector<pair<int,int>> v;
-int dy[4] = {-1, 1, 0, 0}, dx[4] = {0, 0, 1, -1};
 
-void print() {
+int n, m, ar[10][10], visited[10][10], ret = 1e9;
+const int dy[] = {-1, 0, 1, 0}; 
+const int dx[] = {0, 1, 0, -1}; 
+struct Camera {
+    int num, y, x;
+};
+vector<Camera> v;
+
+bool isBreak(int y, int x){
+    if(y < 0 || x < 0 || y >= n || x >= m)return true;
+    if(visited[y][x] == 6)return true;
+    return false;
+}
+
+vector<pair<int,int>> spread(int here, int dir){
+vector<pair<int, int>> _change; 
+    int y = v[here].y; 
+    int x = v[here].x; 
+    if(visited[y][x] == 1){
+        while(true){
+            int ny = y + dy[dir]; 
+            int nx = x + dx[dir]; 
+            if(ny >= 0 && ny < n && nx >= 0 && nx < m && visited[ny][nx] != 6){
+                if(visited[ny][nx] == 0){
+                    visited[ny][nx] = 8; 
+                    _change.push_back({ny, nx});
+                }
+                y = ny; 
+                x = nx; 
+            }else break;
+        }
+    }else if(visited[y][x] == 2){
+        for(int i = 0; i <= 2; i +=2){
+            int _y = y;
+            int _x = x;
+            while(true){
+                int ny = _y + dy[(dir + i) % 4];
+                int nx = _x + dx[(dir + i) % 4]; 
+                if(ny >= 0 && ny < n && nx >= 0 && nx < m && visited[ny][nx] != 6){
+                    if(visited[ny][nx] == 0){visited[ny][nx] = 8;_change.push_back({ny, nx});}
+                    _y = ny;
+                    _x = nx;
+                }else break;
+            }
+        }
+    }else if(visited[y][x] == 3){
+        for(int i = 0; i < 2; i++){
+            int _y = y;
+            int _x = x;
+            while(true){
+                int ny = _y + dy[(dir + i) % 4];
+                int nx = _x + dx[(dir + i) % 4];
+                if(ny >= 0 && ny < n && nx >= 0 && nx < m && visited[ny][nx] != 6){
+                    if(visited[ny][nx] == 0){visited[ny][nx] = 8;_change.push_back({ny, nx});}
+                    _y = ny;
+                    _x = nx;
+                }else break;
+            }
+        }
+    }else if(visited[y][x] == 4){
+        for(int i = 0; i < 3; i++){
+            int _y = y;
+            int _x = x;
+            while(true){
+                int ny = _y + dy[(dir + i) % 4];
+                int nx = _x + dx[(dir + i) % 4];
+                if(ny >= 0 && ny < n && nx >= 0 && nx < m && visited[ny][nx] != 6){
+                    if(visited[ny][nx] == 0){visited[ny][nx] = 8;_change.push_back({ny, nx});}
+                    _y = ny;
+                    _x = nx;
+                }else break;
+            }
+        }
+    }else if(visited[y][x] == 5){
+        for(int i = 0; i < 4; i++){
+            int _y = y;
+            int _x = x;
+            while(true){
+                int ny = _y + dy[(dir + i) % 4];
+                int nx = _x + dx[(dir + i) % 4]; 
+                if(ny >= 0 && ny < n && nx >= 0 && nx < m && visited[ny][nx] != 6){
+                    if(visited[ny][nx] == 0){visited[ny][nx] = 8;_change.push_back({ny, nx});}
+                    _y = ny;
+                    _x = nx;
+                }else break;
+            }
+        }
+    }
+    return _change; 
+}
+
+
+void check() {
+    int sum = 0;
     for(int i=0; i<n; i++){
         for(int j=0; j<m; j++){
-            cout << temp[i][j] << ' ';
-        }
-        cout << '\n';
-    }
-}
-void rotate_camera(pair<int,int> p, int dir){
-
-    int ny = p.first, nx = p.second;
-    temp[ny][nx] = 7;
-    if(ar[p.first][p.second] == 1){
-        while(true){
-            ny += dy[dir];
-            nx += dx[dir];
-            if(ar[ny][nx] == 6 || ny < 0 || nx < 0 || ny >=n || nx >=m)break;
-            temp[ny][nx] = 7;
-        }
-    }else if(ar[p.first][p.second] == 2){
-        while(true){
-            ny += dy[dir];
-            nx += dx[dir];
-            if(ar[ny][nx] == 6 || ny < 0 || nx < 0 || ny >=n || nx >=m)break;
-            temp[ny][nx] = 7;
-        }
-        if(dir == 0)dir = 1;
-        else if(dir == 1)dir = 0;
-        else if(dir == 2)dir = 3;
-        else if(dir == 3)dir ==2;
-        ny = p.first, nx = p.second;
-        while(true){
-            ny += dy[dir];
-            nx += dx[dir];
-            if(ar[ny][nx] == 6 || ny < 0 || nx < 0 || ny >=n || nx >=m)break;
-            temp[ny][nx] = 7;
+            if(!visited[i][j])sum++;
         }
     }
-    else if(ar[p.first][p.second] == 3){
-        while(true){
-            ny += dy[dir];
-            nx += dx[dir];
-            if(ar[ny][nx] == 6 || ny < 0 || nx < 0 || ny >=n || nx >=m)break;
-            temp[ny][nx] = 7;
-        }
-        if(dir == 2)dir = 0;
-        else if(dir == 0) dir =3;
-        else if(dir == 3) dir = 1;
-        else dir = 2;
-        ny = p.first, nx = p.second;
-        while(true){
-            ny += dy[dir];
-            nx += dx[dir];
-            if(ar[ny][nx] == 6 || ny < 0 || nx < 0 || ny >=n || nx >=m)break;
-            temp[ny][nx] = 7;
-        }
-    }
-    else if(ar[p.first][p.second] == 4){
-        while(true){
-            ny += dy[dir];
-            nx += dx[dir];
-            if(ar[ny][nx] == 6 || ny < 0 || nx < 0 || ny >=n || nx >=m)break;
-            temp[ny][nx] = 7;
-        }
-        if(dir == 2)dir = 0;
-        else if(dir == 0) dir =3;
-        else if(dir == 3) dir = 1;
-        else if(dir == 1)dir = 2;
-        ny = p.first, nx = p.second;
-        while(true){
-            ny += dy[dir];
-            nx += dx[dir];
-            if(ar[ny][nx] == 6 || ny < 0 || nx < 0 || ny >=n || nx >=m)break;
-            temp[ny][nx] = 7;
-        }
-        if(dir == 2)dir = 0;
-        else if(dir == 0) dir =3;
-        else if(dir == 3) dir = 1;
-        else if(dir == 1)dir = 2;
-        ny = p.first, nx = p.second;
-        while(true){
-            ny += dy[dir];
-            nx += dx[dir];
-            if(ar[ny][nx] == 6 || ny < 0 || nx < 0 || ny >=n || nx >=m)break;
-            temp[ny][nx] = 7;
-        }
-    }
-    else { 
-        for(int k=0; k<4; k++){
-                    int ny = p.first, nx = p.second;
-                    while(true){
-                        ny += dy[k];
-                        nx += dx[k];
-                        if(ar[ny][nx] == 6 || ny < 0 || nx < 0 || ny >=n || nx >=m)break;
-                        temp[ny][nx] = 7;
-                    }
-                }
-    }
+    ret = min(ret, sum);
 }
 
-void go(int idx) {
-    if(v.size() ==0){
-        int sum = 0;
-        for(int i=0; i<n; i++){
-            for(int j=0; j<m; j++){
-                if(ar[i][j] == 0)sum++;
-            }
-        }
-        ret = min(ret, sum);
-        return;
-    }
+void go(int idx){
+
     if(idx == v.size()){
-        int sum = 0;
-        for(int i=0; i<n; i++){
-            for(int j=0; j<m; j++){
-                if(temp[i][j] == 0)sum++;
-            }
-        }
-        ret = min(ret, sum);
-        // cout << '\n';
-        // print();
-        
-        return;
+        check(); return;
     }
-    int tt[8][8];
-    memcpy(tt, temp, sizeof(temp));
+    
+
     for(int i=0; i<4; i++){
-        rotate_camera(v[idx],i);
+        auto temp = spread(idx, i);
         go(idx+1);
-        memcpy(temp, tt, sizeof(tt));
+        for(auto j : temp)visited[j.first][j.second] = 0;
     }
+    
 }
 
-
-int main() {
+int main()
+{
     cin >> n >> m;
     for(int i=0; i<n; i++){
         for(int j=0; j<m; j++){
-            cin >> ar[i][j];
-            if(ar[i][j] >= 1 && ar[i][j] <= 5){
-                v.push_back({i,j});
-            } else if(ar[i][j] == 6)temp[i][j] =6;
+            cin >> visited[i][j];
+            if(visited[i][j] >= 1 && visited[i][j] <= 5){
+                Camera temp; temp.num = visited[i][j]; temp.y = i; temp.x = j;
+                v.push_back(temp);
+            }
         }
     }
     go(0);
     cout << ret << '\n';
-
     return 0;
 }
