@@ -1,89 +1,70 @@
 #include <bits/stdc++.h>
 using namespace std;
-int n, m, t, temp, ret, xi, di, ki, ar[54][54];
 
+// x의 배수 인덱스들만 회전, d가 0이면 시계 1이면 반시계
+int n, m, t, xi, di, ki, temp, ret;
+vector<vector<int>> vv;
 
-void rotate_(int idx, int dir, int cnt){
-    vector<int> v;
-    for(int i=0; i<m; i++)v.push_back(ar[idx][i]);
-    if(dir == 0)rotate(v.rbegin(), v.rbegin()+cnt, v.rend());
-    else rotate(v.begin(), v.begin()+cnt, v.end());
-    for(int i=0; i<m; i++)ar[idx][i] = v[i];
-}
-
-void to_average() {
-    double sum = 0;
-    double d = 0;
-    double average = sum / d;
+void rotate_(int x, int d, int k){
+    for(int i=x; i<=n; i += x){
+        if(d) rotate(vv[i-1].begin(), vv[i-1].begin() + k , vv[i-1].end()); 
+        else rotate(vv[i-1].rbegin(), vv[i-1].rbegin() + k , vv[i-1].rend());
+    }
+    vector<pair<int,int>> erase_v;
+    int total = 0, cnt = 0;
     for(int i=0; i<n; i++){
         for(int j=0; j<m; j++){
-            if(ar[i][j] == 0)continue;
-            sum += ar[i][j];
-            d++;
+            if(vv[i][j] && vv[i][j] == vv[i][(j+1)%m]){erase_v.push_back({i,j}); erase_v.push_back({i,(j+1)%m});}
+            if(vv[i][j]){total += vv[i][j]; cnt++;}
         }
     }
-    for(int i=0; i<n; i++){
-        for(int j=0; j<m; j++){
-            if(ar[i][j] == 0 )continue;
-            if(ar[i][j] > (sum/d))ar[i][j]--;
-            else if(ar[i][j] < (sum/d))ar[i][j]++;
+    
+    for(int i=0; i<m; i++){
+        for(int j=0; j<n-1; j++){
+            if(vv[j][i] && vv[j][i] == vv[j+1][i]){erase_v.push_back({j,i}); erase_v.push_back({j+1, i});}
         }
     }
-    // cout << "sum: " << sum << "d : " << d << "average : " << sum/d << '\n';
-}
-
-void check() {
-    vector<pair<int,int>> p;
-    for(int i=0; i<n; i++){
-        for(int j=0; j<m; j++){
-            if(ar[i][j] == 0)continue;
-            if((ar[i][j]) == ar[i][ (j+1) % m]){
-                p.push_back({i,j%m});
-                p.push_back({i,(j+1)%m});
-            }
-            if(i != n-1){
-                if( ar[i][j] == ar[i+1][j]){
-                p.push_back({i,j});
-                p.push_back({i+1, j});
+    double average = (double)total / (double)cnt;
+    if(erase_v.size()){
+        for(auto i : erase_v)vv[i.first][i.second] = 0;
+    }
+    else {
+        for(int i=0; i<n; i++){
+            for(int j=0; j<m; j++){
+                if(vv[i][j] && (double)vv[i][j] > average)vv[i][j]--;
+                else if(vv[i][j] && (double)vv[i][j] < average)vv[i][j]++;
             }
         }
     }
-    }
-    if(p.size() != 0){
-        for(auto i : p){
-            ar[i.first][i.second] = 0;
-        }
-    }else {
-        to_average();
-    }
-    // cout << "start" << '\n';
-    //         for(int i=0; i<n; i++){
-    //         for(int j=0; j<m; j++){
-    //             cout << ar[i][j] << ' ' ;
-    //         }
-    //         cout << '\n';
-    //     }
 }
 
 int main()
 {
+    ios_base::sync_with_stdio(0); cin.tie(NULL); cout.tie(NULL);
     cin >> n >> m >> t;
     for(int i=0; i<n; i++){
+        vector<int> v(m);
         for(int j=0; j<m; j++){
-            cin >> ar[i][j];
+            cin >> v[j];
         }
+        vv.push_back(v);
     }
     for(int i=0; i<t; i++){
         cin >> xi >> di >> ki;
-        for(int j=xi; j<=n; j += xi){
-            rotate_(j-1, di, ki);
-        }
-        check();
+        rotate_(xi, di, ki);
+        // 
+        // cout << '\n';
+        // for(int i=0; i<n; i++){
+        //     for(int j=0; j<m; j++){
+        //         cout << vv[i][j] << ' ';
+        //     }
+        //     cout << '\n';
+        // }
+        //
     }
-
     for(int i=0; i<n; i++){
-        for(int j=0; j< m; j++){
-            ret += ar[i][j];
+        for(int j=0; j<m; j++){
+            ret += vv[i][j];
         }
     }
     cout << ret << '\n';
