@@ -1,34 +1,30 @@
 #include <bits/stdc++.h>
-using namespace std;   
-int m, s, tempi;
-string temps;
+using namespace std;
 
+map<int,int> mp;
+int t, b;
+string a;
 
-int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
-    cin >> m;
-    for(int i=0; i<m; i++){
-        cin >> temps;
-        if(temps == "add") {
-            cin >> tempi;
-            s |= (1 << tempi);
-        }
-        else if(temps == "remove"){
-            cin >> tempi;
-            s &= ~(1 << tempi);
-            }
-        else if(temps == "check" ){
-            cin >> tempi;
-            if(s & (1<<tempi))cout << 1 << '\n';
+int main()
+{
+    ios_base::sync_with_stdio(0); cin.tie(NULL); cout.tie(NULL);
+    cin >> t; 
+    for(int i=0; i<t; i++){
+        cin >> a;
+        if(a != "all" && a != "empty")cin >> b;
+        if(a == "add")mp[b] = 1;
+        else if(a == "remove")mp[b] = 0;
+        else if(a == "check"){
+            if(mp[b])cout << 1 << '\n';
             else cout << 0 << '\n';
         }
-        else if(temps == "toggle"){
-            cin >> tempi;
-            s ^= (1<<tempi);
-            }
-        else if(temps == "all") s = (1<<21)-1;
-        else s = 0;
+        else if(a == "toggle"){
+            if(mp[b])mp[b] = 0;
+            else mp[b] = 1;
+        }
+        else if(a == "all"){for(int j=1; j<=20; j++)mp[j] = 1;}
+        else mp.clear(); 
+        //{for(int j=1; j<=20; j++)mp[j] = 0;}
     }
     return 0;
 }
