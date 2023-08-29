@@ -1,11 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-long long a, b, c;
-int main()
-{
-    
-    cout << "\\    /\\" << '\n' <<  " )  ( ')" << '\n' << "(  /  )" << '\n' << " \\(__)|";
+int main() {
+    cout << "\\    /\\" << '\n';
+    cout << " )  ( ')" << '\n';
+    cout << "(  /  )" << '\n';
+    cout << " \\(__)|" << '\n';
 
     return 0;
 }
