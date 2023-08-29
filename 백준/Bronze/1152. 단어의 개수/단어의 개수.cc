@@ -1,29 +1,19 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-int n, ret;
+int cnt;
 string s;
-char c;
+
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
     getline(cin, s);
+    if(s[0] == ' ')cnt--;
+    if(s[s.size()-1] == ' ')cnt--;
     for(int i=0; i<s.size(); i++){
-        if(s[i] != ' '){
-            n++;
-            // cout << "hre";
-        }
-        else if(s[i] == ' '  && n == 0){
-            // cout << "zzzzz" << '\n';
-            continue;
-        }
-        else {
-            n = 0;
-            ret ++;
-        }
+        if(s[i] == ' ')cnt++;
     }
-    if(n != 0)ret++;
-    cout << ret << "\n";
+    cout << cnt+1 << '\n';
+    
+
     return 0;
 }
