@@ -1,43 +1,47 @@
 #include <bits/stdc++.h>
-using namespace std;  
+using namespace std;
 
-int n, max_sum = -987654321;
+vector<int> numV;
+vector<char> operV;
 string s;
-vector<int> num_v;
-vector<char> oper_v;
+int n, ret = -1e9;
 
-int calculate(int num, char oper, int nextNum){
-    if(oper == '+')return num + nextNum;
-    else if(oper == '*')return num * nextNum;
-    else return num - nextNum;
+int cal(int a, int b, char oper){
+    if(oper == '+')return a + b;
+    else if(oper == '-')return a - b;
+    else return a * b;
 }
 
-void go(int idx, int sum) {
-    // cout << idx << '\n';
-    if(idx == num_v.size()-1){
-        max_sum = max(sum, max_sum);
+void go(int idx, int now){
+    // cout << idx << ' ' << now << '\n';
+    if(idx == operV.size()){
+        ret = max(ret, now);
         return;
     }
-    go(idx + 1,calculate(sum,oper_v[idx],num_v[idx + 1]));
     
-    if(idx + 2 <= num_v.size() - 1){
-        int temp = calculate(num_v[idx+1],oper_v[idx+1],num_v[idx + 2]);
-        go(idx + 2, calculate(sum, oper_v[idx], temp));
-    }
-    return;
+    go(idx+1, cal(now, numV[idx+1], operV[idx]));
+    if(idx+2 < numV.size())go(idx+2, cal(now, cal(numV[idx+1], numV[idx+2], operV[idx+1]) ,  operV[idx]));
+    
 }
 
-int main() {
+int main()
+{
     cin >> n >> s;
     for(int i=0; i<s.size(); i++){
-        if(i % 2 == 0)num_v.push_back(s[i] - '0');
-        else oper_v.push_back(s[i]);
+        // cout << i << ' ';
+        if(i%2){
+            operV.push_back(s[i]);
+            // cout << s[i] << '\n';
+        }
+        else {
+            numV.push_back(s[i]-'0');
+            // cout << s[i] - '0' << '\n';   
+        }
     }
-    // cout << num_v.size();
-    // for(auto i : oper_v)cout << i << ' ';
+    // for(int i : numV)cout << i << ' ';
     // cout << '\n';
-    // for(auto i : num_v) cout << i << ' ';
-    go(0, num_v[0]);
-    cout << max_sum << '\n';
+    // for(char i : operV)cout << i << ' ';
+    go(0, numV[0]);
+    cout << ret << '\n';
     return 0;
 }
