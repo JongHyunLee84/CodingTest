@@ -1,9 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-int sz;
-string s;
-char ar[9][19];
 
+char ar[5][16], temp;
+string s, ret;
 int main()
 {
     for(int i=0; i<5; i++){
@@ -12,10 +11,11 @@ int main()
             ar[i][j] = s[j];
         }
     }
-    for(int j=0; j<15; j++){
-    for(int i=0; i<5; i++){
-        if(ar[i][j] != NULL)cout << ar[i][j];
+    for(int i=0; i<15; i++){
+        for(int j=0; j<5; j++){
+            if(ar[j][i] != NULL)ret += ar[j][i];
+        }
     }
-    }
+    cout << ret << '\n';
     return 0;
 }
