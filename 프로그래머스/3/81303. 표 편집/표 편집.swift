@@ -1,64 +1,118 @@
 import Foundation
 
-class Node {
-    var prev: Int
-    var next: Int
-    
-    init(prev: Int, next: Int) {
-        self.prev = prev
-        self.next = next
-    }
-}
-
-func solution(_ n: Int, _ k: Int, _ cmd: [String]) -> String {
-    var table = [Node]()
+func solution(_ n:Int, _ k:Int, _ cmd:[String]) -> String {
+    var list = DoubleLinkedList<Int>()
     for i in 0..<n {
-        table.append(Node(prev: i - 1, next: i + 1))
+        list.insertLast(i)
     }
-    table[n-1].next = -1
     
-    var current = k
-    var stack = [Int]()
-    var removed = Set<Int>()
+    var current = list[k]
+    var deleted: [DoubleNode<Int>?] = []
     
-    for command in cmd {
-        let parts = command.split(separator: " ")
-        switch parts[0] {
-        case "U":
-            let x = Int(parts[1])!
-            for _ in 0..<x {
-                current = table[current].prev
+    for i in 0..<cmd.count {
+        let str = cmd[i]
+        if str.contains("U") {
+            let num = Int(str.split(separator: " ")[1])!
+            for _ in 0..<num {
+                current = current?.prev
             }
-        case "D":
-            let x = Int(parts[1])!
-            for _ in 0..<x {
-                current = table[current].next
+        } else if str.contains("D") {
+            let num = Int(str.split(separator: " ")[1])!
+            for _ in 0..<num {
+                current = current?.next
             }
-        case "C":
-            stack.append(current)
-            removed.insert(current)
+        } else if str.contains("C") {
+            deleted.append(current)
+            let nextNode = current?.next
+            let prevNode = current?.prev
             
-            let prev = table[current].prev
-            let next = table[current].next
+            nextNode?.prev = prevNode
+            prevNode?.next = nextNode
             
-            if prev != -1 { table[prev].next = next }
-            if next != -1 { table[next].prev = prev }
+            if current === list.tail {
+                current = prevNode
+                list.tail = prevNode
+            } else {
+                current = nextNode
+            }
             
-            current = next != -1 ? next : prev
-        case "Z":
-            let restored = stack.removeLast()
-            removed.remove(restored)
+            if current === nil {
+                current = list.tail
+            }
+        } else { // Z command
+            let node = deleted.removeLast()
+            let nextNode = node?.next
+            let prevNode = node?.prev
             
-            let prev = table[restored].prev
-            let next = table[restored].next
+            nextNode?.prev = node
+            prevNode?.next = node
             
-            if prev != -1 { table[prev].next = restored }
-            if next != -1 { table[next].prev = restored }
-        default:
-            break
+            if nextNode == nil {
+                list.tail = node
+            }
         }
     }
     
-    return (0..<n).map { removed.contains($0) ? "X" : "O" }.joined()
+    var result = Array(repeating: "O", count: n)
+    for node in deleted {
+        if let index = node?.value {
+            result[index] = "X"
+        }
+    }
+    
+    return result.joined()
 }
 
+public class DoubleNode<T> {
+    public var next: DoubleNode?
+    public weak var prev: DoubleNode? // 이전 노드와 다음 노드 간 서로의 ref count를 올리기에 레퍼런스 사이클 발생
+    public var value: T
+    
+    public init(
+        next: DoubleNode? = nil,
+        prev: DoubleNode? = nil,
+        value: T
+    ) {
+        self.next = next
+        self.prev = prev
+        self.value = value
+    }
+}
+
+public class DoubleLinkedList<T> {
+    public var head: DoubleNode<T>?
+    public var tail: DoubleNode<T>?
+    
+    public init(
+        head: DoubleNode<T>? = nil,
+        tail: DoubleNode<T>? = nil
+    ) {
+        self.head = head
+        self.tail = tail
+    }
+    
+    public subscript(index: Int) -> DoubleNode<T>? {
+        var currentNode = head
+        var idx = 0
+        while currentNode != nil {
+            if idx == index {
+                return currentNode
+            }
+            currentNode = currentNode?.next
+            idx += 1
+        }
+        return nil
+    }
+    
+    public func insertLast(_ value: T) {
+        let newNode = DoubleNode(value: value)
+        if tail == nil { // head로 비교해도됨
+            self.head = newNode
+            self.tail = newNode
+        } else {
+            newNode.prev = tail
+            tail?.next = newNode
+            tail = newNode
+        }
+    }
+}
