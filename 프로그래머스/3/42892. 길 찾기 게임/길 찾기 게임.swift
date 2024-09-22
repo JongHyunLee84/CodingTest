@@ -15,21 +15,31 @@ class Node {
 }
 
 func solution(_ nodeinfo: [[Int]]) -> [[Int]] {
-    let nodes = nodeinfo.enumerated().map { Node(id: $0.offset + 1, x: $0.element[0], y: $0.element[1]) }
-    let sortedNodes = nodes.sorted { 
+    // 노드 정보에 인덱스(ID) 추가 및 y좌표 기준 내림차순, x좌표 기준 오름차순 정렬
+    let sortedNodes = nodeinfo.enumerated().map { (index, node) in
+        return (id: index + 1, x: node[0], y: node[1])
+    }.sorted { 
         if $0.y == $1.y {
             return $0.x < $1.x
         }
         return $0.y > $1.y
     }
     
+    // 트리 구성
     let root = buildTree(sortedNodes)
     
-    return [preorder(root), postorder(root)]
+    // 전위 순회와 후위 순회 수행
+    var preorder: [Int] = []
+    var postorder: [Int] = []
+    preorderTraversal(root, &preorder)
+    postorderTraversal(root, &postorder)
+    
+    return [preorder, postorder]
 }
 
-func buildTree(_ nodes: [Node]) -> Node? {
-    guard let root = nodes.first else { return nil }
+func buildTree(_ nodes: [(id: Int, x: Int, y: Int)]) -> Node? {
+    guard let first = nodes.first else { return nil }
+    let root = Node(id: first.id, x: first.x, y: first.y)
     
     for node in nodes.dropFirst() {
         insertNode(root, node)
@@ -38,28 +48,32 @@ func buildTree(_ nodes: [Node]) -> Node? {
     return root
 }
 
-func insertNode(_ parent: Node, _ newNode: Node) {
+func insertNode(_ parent: Node, _ newNode: (id: Int, x: Int, y: Int)) {
     if newNode.x < parent.x {
         if let left = parent.left {
             insertNode(left, newNode)
         } else {
-            parent.left = newNode
+            parent.left = Node(id: newNode.id, x: newNode.x, y: newNode.y)
         }
     } else {
         if let right = parent.right {
             insertNode(right, newNode)
         } else {
-            parent.right = newNode
+            parent.right = Node(id: newNode.id, x: newNode.x, y: newNode.y)
         }
     }
 }
 
-func preorder(_ node: Node?) -> [Int] {
-    guard let node = node else { return [] }
-    return [node.id] + preorder(node.left) + preorder(node.right)
+func preorderTraversal(_ node: Node?, _ result: inout [Int]) {
+    guard let node = node else { return }
+    result.append(node.id)
+    preorderTraversal(node.left, &result)
+    preorderTraversal(node.right, &result)
 }
 
-func postorder(_ node: Node?) -> [Int] {
-    guard let node = node else { return [] }
-    return postorder(node.left) + postorder(node.right) + [node.id]
+func postorderTraversal(_ node: Node?, _ result: inout [Int]) {
+    guard let node = node else { return }
+    postorderTraversal(node.left, &result)
+    postorderTraversal(node.right, &result)
+    result.append(node.id)
 }
