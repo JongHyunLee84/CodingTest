@@ -1,79 +1,69 @@
-import Foundation
-
-class Node {
-    let id: Int
-    let x: Int
-    let y: Int
-    var left: Node?
-    var right: Node?
-    
-    init(id: Int, x: Int, y: Int) {
-        self.id = id
-        self.x = x
-        self.y = y
+func solution(_ nodeinfo:[[Int]]) -> [[Int]] {
+    // y의 내림차순 -> x의 오름차순으로 정렬
+    // 하나씩 x를 기준으로 nil이 나올 때까지 왼/오로 재귀적으로 보냄.
+    // 전위, 후위 순회하기
+    var nodes: [Node] = []
+    for i in 0..<nodeinfo.count {
+        let pos = nodeinfo[i]
+        nodes.append(.init(i+1, pos[0], pos[1]))
     }
-}
-
-func solution(_ nodeinfo: [[Int]]) -> [[Int]] {
-    // 노드 정보에 인덱스(ID) 추가 및 y좌표 기준 내림차순, x좌표 기준 오름차순 정렬
-    let sortedNodes = nodeinfo.enumerated().map { (index, node) in
-        return (id: index + 1, x: node[0], y: node[1])
-    }.sorted { 
+    nodes.sort { 
         if $0.y == $1.y {
             return $0.x < $1.x
         }
         return $0.y > $1.y
     }
     
-    // 트리 구성
-    let root = buildTree(sortedNodes)
-    
-    // 전위 순회와 후위 순회 수행
-    var preorder: [Int] = []
-    var postorder: [Int] = []
-    preorderTraversal(root, &preorder)
-    postorderTraversal(root, &postorder)
-    
-    return [preorder, postorder]
-}
-
-func buildTree(_ nodes: [(id: Int, x: Int, y: Int)]) -> Node? {
-    guard let first = nodes.first else { return nil }
-    let root = Node(id: first.id, x: first.x, y: first.y)
-    
-    for node in nodes.dropFirst() {
-        insertNode(root, node)
+    for i in nodes {
+        makeTree(i, nodes.first!)
     }
     
-    return root
+    return [pre(nodes.first!), post(nodes.first!)]
 }
 
-func insertNode(_ parent: Node, _ newNode: (id: Int, x: Int, y: Int)) {
-    if newNode.x < parent.x {
-        if let left = parent.left {
-            insertNode(left, newNode)
+class Node {
+    var left, right: Node?
+    var value, x, y: Int
+    
+    init(_ value: Int, _ x: Int, _ y: Int) {
+        self.value = value
+        self.x = x
+        self.y = y
+    }
+}
+
+func makeTree(_ child: Node, _ parent: Node?) {
+    guard let parent = parent else { return }
+    if parent.x < child.x {
+        if parent.right == nil {
+            parent.right = child
+            return
         } else {
-            parent.left = Node(id: newNode.id, x: newNode.x, y: newNode.y)
+            makeTree(child, parent.right)
         }
-    } else {
-        if let right = parent.right {
-            insertNode(right, newNode)
+    } else if parent.x > child.x {
+        if parent.left == nil {
+            parent.left = child
+            return
         } else {
-            parent.right = Node(id: newNode.id, x: newNode.x, y: newNode.y)
+            makeTree(child, parent.left)
         }
     }
 }
 
-func preorderTraversal(_ node: Node?, _ result: inout [Int]) {
-    guard let node = node else { return }
-    result.append(node.id)
-    preorderTraversal(node.left, &result)
-    preorderTraversal(node.right, &result)
+func pre(_ node: Node?) -> [Int] {
+    guard let node = node else { return [] }
+    if node.left == nil && node.right == nil { 
+        return  [node.value]
+    }
+    return [node.value] + pre(node.left) + pre(node.right)
 }
 
-func postorderTraversal(_ node: Node?, _ result: inout [Int]) {
-    guard let node = node else { return }
-    postorderTraversal(node.left, &result)
-    postorderTraversal(node.right, &result)
-    result.append(node.id)
+func post(_ node: Node?) -> [Int] {
+    guard let node = node else { return [] }
+    if node.left == nil && node.right == nil { 
+        return  [node.value]
+    }
+    return post(node.left) + post(node.right) + [node.value]
 }
+
